@@ -20,7 +20,17 @@ import SocialLinks from '@/components/SocialLinks.astro'
     aria-hidden="true"
     data-hero-video
   >
-    <source src="/videos/web/hero-sm.mp4" type="video/mp4" media="(max-width: 640px)" />
+    <source
+      src="/videos/web/hero-sm.webm"
+      type="video/webm"
+      media="(max-width: 640px)"
+    />
+    <source
+      src="/videos/web/hero-sm.mp4"
+      type="video/mp4"
+      media="(max-width: 640px)"
+    />
+    <source src="/videos/web/hero.webm" type="video/webm" />
     <source src="/videos/web/hero.mp4" type="video/mp4" />
   </video>
 
@@ -73,22 +83,32 @@ import SocialLinks from '@/components/SocialLinks.astro'
         <NextRun alignEnd />
       </div>
 
-      <!-- Datos clave de la salida -->
-      <dl class="mt-10 grid grid-cols-3 gap-3 border-t-2 border-brand/25 pt-5">
+      <!-- Datos clave de la salida. En móvil sólo caben dos columnas sin que
+           "Sábados 8:00" parta en dos líneas: el precio es un guiño y se
+           reserva para pantallas a partir de tablet. -->
+      <dl
+        class="mt-10 grid grid-cols-2 gap-4 border-t-2 border-brand/25 pt-5 sm:grid-cols-3"
+      >
         <div>
           <dt class="text-xs tracking-wider text-white/50 uppercase">Cuándo</dt>
-          <dd class="mt-1 font-display text-2xl text-brand sm:text-3xl">
+          <dd
+            class="mt-1 font-display text-2xl text-brand sm:text-3xl"
+            data-tabular
+          >
             {CLUB.day} {CLUB.time}
           </dd>
         </div>
         <div>
           <dt class="text-xs tracking-wider text-white/50 uppercase">Ritmo</dt>
-          <dd class="mt-1 font-display text-2xl text-brand sm:text-3xl">
+          <dd
+            class="mt-1 font-display text-2xl text-brand sm:text-3xl"
+            data-tabular
+          >
             {CLUB.pace}
           </dd>
           <dd class="text-xs text-white/50">{CLUB.paceUnit}</dd>
         </div>
-        <div>
+        <div class="hidden sm:block">
           <dt class="text-xs tracking-wider text-white/50 uppercase">Precio</dt>
           <dd class="mt-1 font-display text-2xl text-brand sm:text-3xl">0 €</dd>
           <dd class="text-xs text-white/50">café incluido</dd>
