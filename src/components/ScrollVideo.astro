@@ -1,5 +1,5 @@
 ---
-import Reveal from './Reveal.astro'
+import Reveal from '@/components/Reveal.astro'
 
 interface Props {
   src: string
@@ -12,12 +12,23 @@ interface Props {
   sticker?: string
   /** Coloca el vídeo a la derecha en pantallas grandes */
   flip?: boolean
-  /** Numerito grande decorativo */
-  index: string
+  /**
+   * Qué parte del encuadre se conserva al recortar a cuadrado en móvil.
+   * `bottom` cuando lo importante está en la mitad inferior.
+   */
+  focus?: 'center' | 'bottom'
 }
 
-const { src, poster, eyebrow, title, description, sticker, flip = false, index } =
-  Astro.props
+const {
+  src,
+  poster,
+  eyebrow,
+  title,
+  description,
+  sticker,
+  flip = false,
+  focus = 'center'
+} = Astro.props
 ---
 
 <article
@@ -28,8 +39,13 @@ const { src, poster, eyebrow, title, description, sticker, flip = false, index }
     <div
       class="relative overflow-hidden rounded-[2rem] border-2 border-brand/40 bg-ink-800 shadow-[0_0_60px_-15px] shadow-brand/30"
     >
+      <!-- Cuadrado en móvil: un 9/16 a pantalla completa obliga a scrollear el
+           vídeo entero. En tablet y escritorio ya cabe vertical. -->
       <video
-        class="aspect-[9/16] w-full object-cover"
+        class:list={[
+          'aspect-square w-full object-cover sm:aspect-[9/16]',
+          focus === 'bottom' ? 'object-bottom sm:object-center' : 'object-center'
+        ]}
         src={src}
         poster={poster}
         muted
@@ -59,15 +75,8 @@ const { src, poster, eyebrow, title, description, sticker, flip = false, index }
   </Reveal>
 
   <Reveal delay={120} class:list={[flip && 'md:order-1']}>
-    <span
-      aria-hidden="true"
-      class="block font-display text-6xl leading-none text-brand/15 md:text-8xl"
-    >
-      {index}
-    </span>
-
     <p
-      class="mt-2 font-display text-sm tracking-[0.25em] text-brand uppercase md:text-base"
+      class="font-display text-sm tracking-[0.25em] text-brand uppercase md:text-base"
     >
       {eyebrow}
     </p>

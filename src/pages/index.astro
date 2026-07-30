@@ -1,15 +1,15 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import Hero from '../components/Hero.astro'
-import Marquee from '../components/Marquee.astro'
-import ScrollVideo from '../components/ScrollVideo.astro'
-import Races from '../components/Races.astro'
-import MeetingPoint from '../components/MeetingPoint.astro'
-import Gallery from '../components/Gallery.astro'
-import Faq from '../components/Faq.astro'
-import Footer from '../components/Footer.astro'
-import StickyCta from '../components/StickyCta.astro'
-import { CLUB } from '../consts'
+import Layout from '@/layouts/Layout.astro'
+import Hero from '@/components/Hero.astro'
+import Marquee from '@/components/Marquee.astro'
+import ScrollVideo from '@/components/ScrollVideo.astro'
+import Races from '@/components/Races.astro'
+import MeetingPoint from '@/components/MeetingPoint.astro'
+import Gallery from '@/components/Gallery.astro'
+import Faq from '@/components/Faq.astro'
+import Footer from '@/components/Footer.astro'
+import StickyCta from '@/components/StickyCta.astro'
+import { CLUB } from '@/consts'
 ---
 
 <Layout>
@@ -33,7 +33,6 @@ import { CLUB } from '../consts'
       class="mx-auto max-w-6xl space-y-20 px-5 py-20 sm:space-y-28 sm:py-28"
     >
       <ScrollVideo
-        index="01"
         eyebrow="Antes de salir, al café invitamos nosotros"
         title="Primero el café"
         description="La salida empieza en la puerta de Le Tigré, y no corriendo: nos quedamos un rato de charla, nos ponemos al día de la semana, de las lesiones y de la próxima carrera. Y con la charla llega un café de especialidad, cortesía de la casa. No hay que pagar nada: si vienes a correr con nosotros, el café está invitado."
@@ -43,7 +42,6 @@ import { CLUB } from '../consts'
       />
 
       <ScrollVideo
-        index="02"
         eyebrow="Después de la salida · Recuperar energías"
         title="Y a la vuelta, croissants"
         description="Cuando volvemos de la salida aparecen las bandejas de croissants recién hechos para reponer lo gastado. Kilómetros primero, mantequilla después. Es el único club donde el avituallamiento es mejor que el entrenamiento."
@@ -69,12 +67,12 @@ import { CLUB } from '../consts'
 
     <section class="mx-auto max-w-6xl px-5 py-20 sm:py-28">
       <ScrollVideo
-        index="03"
         eyebrow={`${CLUB.pace} ${CLUB.paceUnit}`}
         title="Un ritmo para hablar"
         description="Vamos entre 5:30 y 5:45 el kilómetro: lo bastante cómodo para ir de charla y lo bastante serio para que el sábado cuente. Nadie se queda solo por detrás y nadie sale disparado por delante. Si es tu primera vez, avísanos en el grupo y alguien va contigo."
         src="/videos/web/letgire-running-2.mp4"
         poster="/videos/web/letgire-running-2.jpg"
+        focus="bottom"
         sticker="Nadie se queda atrás"
       />
     </section>

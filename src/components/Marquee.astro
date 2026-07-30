@@ -34,41 +34,45 @@ const groups = [0, 1]
 const repeated = [items, items, items].flat()
 ---
 
-<div
-  class:list={[
-    'relative flex overflow-hidden py-3',
-    // Al inclinar la cinta se destaparían las esquinas: la sacamos del viewport
-    tilt !== 0 && '-mx-[6%] w-[112%]',
-    wrapper,
-    className
-  ]}
-  style={`transform: rotate(${tilt}deg);`}
->
-  {
-    groups.map((groupIndex) => (
-      <div
-        class:list={[
-          'flex min-w-full shrink-0 items-center justify-around gap-5 will-change-transform',
-          reverse ? 'animate-marquee-reverse' : 'animate-marquee'
-        ]}
-        style={`--marquee-duration: ${duration};`}
-        aria-hidden={groupIndex === 1 ? 'true' : undefined}
-      >
-        {repeated.map((item) => (
-          <span class="flex shrink-0 items-center gap-5">
-            <span class="font-display text-xl whitespace-nowrap uppercase sm:text-2xl">
-              {item}
+<!-- La cinta inclinada tiene que ser más ancha que la pantalla para que no se
+     destapen las esquinas, así que sobresale por los lados. Este envoltorio
+     recorta ese exceso: `overflow-x: clip` corta a lo ancho sin tocar el alto,
+     que la rotación necesita libre. Sin él, el sobrante genera scroll lateral. -->
+<div class:list={['relative overflow-x-clip', className]}>
+  <div
+    class:list={[
+      'relative flex overflow-hidden py-3',
+      tilt !== 0 && '-mx-[6%] w-[112%]',
+      wrapper
+    ]}
+    style={`transform: rotate(${tilt}deg);`}
+  >
+    {
+      groups.map((groupIndex) => (
+        <div
+          class:list={[
+            'flex min-w-full shrink-0 items-center justify-around gap-5 will-change-transform',
+            reverse ? 'animate-marquee-reverse' : 'animate-marquee'
+          ]}
+          style={`--marquee-duration: ${duration};`}
+          aria-hidden={groupIndex === 1 ? 'true' : undefined}
+        >
+          {repeated.map((item) => (
+            <span class="flex shrink-0 items-center gap-5">
+              <span class="font-display text-xl whitespace-nowrap uppercase sm:text-2xl">
+                {item}
+              </span>
+              <span
+                aria-hidden="true"
+                class:list={[
+                  'size-1.5 shrink-0 rotate-45',
+                  variant === 'solid' ? 'bg-ink-950/40' : 'bg-brand/40'
+                ]}
+              />
             </span>
-            <span
-              aria-hidden="true"
-              class:list={[
-                'size-1.5 shrink-0 rotate-45',
-                variant === 'solid' ? 'bg-ink-950/40' : 'bg-brand/40'
-              ]}
-            />
-          </span>
-        ))}
-      </div>
-    ))
-  }
+          ))}
+        </div>
+      ))
+    }
+  </div>
 </div>
