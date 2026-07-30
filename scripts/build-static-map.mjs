@@ -114,15 +114,21 @@ try {
     '-crop',
     `${WIDTH}x${HEIGHT}+${cropLeft}+${cropTop}`,
     '+repage',
-    // Las teselas dark_all son casi negras: se estira el rango
-    '-evaluate',
-    'Multiply',
-    '2.7',
-    // Tinte lima de la marca
-    '-fill',
-    'rgb(200,255,140)',
-    '-colorize',
-    '40',
+    // Las teselas `dark_all` no pasan de 50 de 255: `-level` estira ese rango
+    // para que las calles se lean sin aclarar el fondo
+    '-level',
+    '4%,24%',
+    // Duotono con una tabla de color (negro de marca -> lima). Con `-colorize`
+    // el tinte se sumaba también a las sombras y el fondo salía verde oliva;
+    // así el negro sigue siendo negro y el verde aparece sólo en las calles.
+    '-colorspace',
+    'Gray',
+    '(',
+    '-size',
+    '1x256',
+    'gradient:#c9f78a-#06030b',
+    ')',
+    '-clut',
     '-strip',
     mosaicPath
   ]
