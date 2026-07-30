@@ -1,0 +1,26 @@
+# Cabeceras para Cloudflare (Workers Assets / Pages)
+
+# Todo lo que Astro genera lleva hash en el nombre: se puede cachear para siempre
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# MapLibre autoalojado: la versión va fijada por el package.json
+/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Los vídeos y sus pósters no llevan hash, pero cambian muy de vez en cuando
+/videos/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.webp
+  Cache-Control: public, max-age=604800
+
+# El HTML tiene que revalidarse: la próxima salida se calcula en cliente, pero
+# el resto del contenido sí cambia entre despliegues
+/
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
