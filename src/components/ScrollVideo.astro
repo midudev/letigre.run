@@ -2,8 +2,8 @@
 import Reveal from '@/components/Reveal.astro'
 
 interface Props {
-  src: string
-  poster: string
+  /** Nombre base del clip en `public/videos/web` (sin extensión) */
+  name: string
   /** Etiqueta pequeña sobre el título */
   eyebrow: string
   title: string
@@ -20,8 +20,7 @@ interface Props {
 }
 
 const {
-  src,
-  poster,
+  name,
   eyebrow,
   title,
   description,
@@ -29,6 +28,8 @@ const {
   flip = false,
   focus = 'center'
 } = Astro.props
+
+const base = `/videos/web/${name}`
 ---
 
 <article
@@ -46,8 +47,7 @@ const {
           'aspect-square w-full object-cover sm:aspect-[9/16]',
           focus === 'bottom' ? 'object-bottom sm:object-center' : 'object-center'
         ]}
-        src={src}
-        poster={poster}
+        poster={`${base}.webp`}
         muted
         loop
         playsinline
@@ -55,7 +55,13 @@ const {
         disablepictureinpicture
         tabindex="-1"
         aria-label={title}
-        data-scroll-video></video>
+        data-scroll-video
+      >
+        <!-- WebM primero: pesa la mitad que el MP4 a igual calidad. El MP4
+             queda como respaldo para navegadores sin VP9. -->
+        <source src={`${base}.webm`} type="video/webm" />
+        <source src={`${base}.mp4`} type="video/mp4" />
+      </video>
 
       <!-- Barra de progreso del clip -->
       <div class="absolute inset-x-0 bottom-0 h-1 bg-ink-950/50">
