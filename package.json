@@ -11,22 +11,19 @@
     "preview": "astro preview",
     "astro": "astro",
     "deploy": "astro build && wrangler deploy",
-    "prebuild": "pnpm sync:maplibre",
-    "predev": "pnpm sync:maplibre",
-    "sync:maplibre": "node scripts/sync-maplibre.mjs"
+    "map": "node scripts/build-static-map.mjs",
+    "images": "node scripts/optimize-images.mjs",
+    "logos": "node scripts/optimize-logos.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.0.6",
     "gsap": "^3.15.0",
-    "maplibre-gl": "^6.0.0",
-    "sharp": "^0.35.3",
     "tailwind-animations": "^1.0.1",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "svgo": "^4.0.2",
     "wrangler": "^4.115.0"
   }
 }

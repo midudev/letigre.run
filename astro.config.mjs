@@ -11,6 +11,13 @@ export default defineConfig({
   site: 'https://letigre.run',
   output: 'static',
   integrations: [sitemap()],
+  // Las fotos se optimizan offline con `pnpm images` y se sirven desde
+  // public/images con <picture>. Sin Sharp en el build de Astro.
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/noop'
+    }
+  },
   build: {
     // El CSS del sitio son ~8 KB: en línea evita una petición bloqueante
     // en la ruta crítica
@@ -34,6 +41,9 @@ export default defineConfig({
       provider: fontProviders.google(),
       name: 'Inter',
       cssVariable: '--font-inter',
+      // Medido: la variable subseteada a latin pesa 48.432 B y los estáticos 400
+      // y 600 de Fontsource suman 48.116 B. Son 316 bytes menos a cambio de una
+      // petición y un preload más, así que gana la variable.
       weights: ['100 900'],
       styles: ['normal'],
       subsets: ['latin'],
