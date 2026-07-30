@@ -1,7 +1,7 @@
 ---
-import catOnly from '../../public/cat-only.svg?raw'
-import catLogo from '../../public/cat-logo.svg?raw'
-import croissantLogo from '../../public/croissant-logo.svg?raw'
+import CatOnly from '@/assets/logos/cat-only.svg'
+import CatBadge from '@/assets/logos/cat-logo.svg'
+import Croissant from '@/assets/logos/croissant-logo.svg'
 
 interface Props {
   /**
@@ -9,24 +9,23 @@ interface Props {
    * `croissant` el lockup horizontal con el croissant corredor.
    */
   variant?: 'cat' | 'badge' | 'croissant'
-  class?: string
+  /** Si se pasa, el logo cuenta como imagen con nombre; si no, es decorativo */
   title?: string
+  class?: string
 }
 
-const { variant = 'cat', class: className = '', title } = Astro.props
+const { variant = 'cat', title, class: className = '' } = Astro.props
 
-const sources = { cat: catOnly, badge: catLogo, croissant: croissantLogo }
-
-// Los SVG vienen de Illustrator: hay que quitar el prólogo XML (inválido en
-// HTML inline) y las medidas fijas para poder escalarlos con CSS.
-const svg = sources[variant]
-  .replace(/<\?xml[\s\S]*?\?>/, '')
-  .replace(/\s(width|height)="[^"]*"/g, '')
-  .replace(
-    '<svg',
-    `<svg class="${className}" ${title ? 'role="img"' : 'aria-hidden="true"'} preserveAspectRatio="xMidYMid meet"`
-  )
-  .replace('>', `>${title ? `<title>${title}</title>` : ''}`)
+const VARIANTS = { cat: CatOnly, badge: CatBadge, croissant: Croissant }
+const Svg = VARIANTS[variant]
 ---
 
-<Fragment set:html={svg} />
+<!-- Los SVG traen `width`/`height` de Illustrator: `h-auto` deja que la altura
+     la marque el viewBox cuando el ancho se fija por CSS. Los trazos usan
+     `currentColor`, así que el color se hereda con `text-*`. -->
+<Svg
+  class:list={['h-auto', className]}
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+/>
