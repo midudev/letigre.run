@@ -11,6 +11,11 @@ export default defineConfig({
   site: 'https://letigre.run',
   output: 'static',
   integrations: [sitemap()],
+  build: {
+    // El CSS del sitio son ~8 KB: en línea evita una petición bloqueante
+    // en la ruta crítica
+    inlineStylesheets: 'always'
+  },
   fonts: [
     {
       // Títulos
