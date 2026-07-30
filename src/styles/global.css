@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/*
+ * Le Tigre Running Community — colores oficiales
+ * Extraídos del logo de la camiseta: lima/volt (hue 79°) sobre negro.
+ */
+@theme {
+  /* Tipografías. Las `--font-anton` / `--font-inter` las inyecta la Fonts API de Astro */
+  --font-display: var(--font-anton);
+  --font-sans: var(--font-inter);
+
+  /* Lima — color de marca. Escala 50..950 */
+  --color-lime-brand-50: #f6fee7;
+  --color-lime-brand-100: #ecfcca;
+  --color-lime-brand-200: #dcfc97;
+  --color-lime-brand-300: #c6f95f;
+  --color-lime-brand-400: #b9f731; /* primario */
+  --color-lime-brand-500: #a3dd22;
+  --color-lime-brand-600: #86b81c;
+  --color-lime-brand-700: #648c0e;
+  --color-lime-brand-800: #446105;
+  --color-lime-brand-900: #2c3f03;
+  --color-lime-brand-950: #16210a;
+
+  /* Negro de la camiseta */
+  --color-ink-950: #06030b;
+  --color-ink-900: #0a0a0b;
+  --color-ink-800: #16161a;
+  --color-ink-700: #27222c;
+  --color-ink-600: #3a3540;
+
+  /* Alias semánticos */
+  --color-brand: var(--color-lime-brand-400);
+  --color-brand-strong: var(--color-lime-brand-800);
+  --color-surface: var(--color-ink-950);
+  --color-on-brand: var(--color-ink-950);
+
+  /* Animaciones */
+  --animate-marquee: marquee var(--marquee-duration, 25s) linear infinite;
+  --animate-marquee-reverse: marquee-reverse var(--marquee-duration, 25s) linear
+    infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+  --animate-float: float 5s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+
+  /* Cada grupo mide como mínimo el ancho de la pantalla, así que desplazarlo
+     el 100% de su propio ancho lo saca justo cuando el siguiente ocupa su sitio */
+  @keyframes marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-100%, 0, 0);
+    }
+  }
+
+  @keyframes marquee-reverse {
+    from {
+      transform: translate3d(-100%, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-4deg);
+    }
+    50% {
+      transform: translateY(-12px) rotate(4deg);
+    }
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      opacity: 0.7;
+      transform: scale(0.9);
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(1.6);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-ink-950);
+    color: white;
+    font-family: var(--font-sans);
+    /* Evita scroll horizontal por los marquees y textos rotados */
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: var(--color-brand);
+    color: var(--color-ink-950);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: 0.01em;
+  }
+}
+
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-brand);
+  paint-order: stroke fill;
+}
+
+/* Entrada de secciones al hacer scroll. La clase `is-visible` la pone el
+   IntersectionObserver de `Reveal.astro`. */
+@utility reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+
+  &.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
