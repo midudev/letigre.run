@@ -1,7 +1,7 @@
 ---
 import { Font } from 'astro:assets'
-import { COLORS, FAQ, LINKS, SITE, CLUB } from '../consts'
-import '../styles/global.css'
+import { COLORS, FAQ, LINKS, SITE, CLUB } from '@/consts'
+import '@/styles/global.css'
 
 interface Props {
   title?: string
@@ -10,11 +10,17 @@ interface Props {
 
 const { title = SITE.title, description = SITE.description } = Astro.props
 
+const canonical = new URL(Astro.url.pathname, Astro.site)
+const ogImage = new URL('/og.jpg', Astro.site)
+
 const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'SportsClub',
+      '@id': `${Astro.site}#club`,
+      url: canonical.href,
+      image: ogImage.href,
       name: SITE.name,
       description: SITE.description,
       sport: 'Running',
@@ -63,15 +69,30 @@ const structuredData = {
 
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL('/og.jpg', Astro.site ?? Astro.url)} />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content={`El grupo de ${SITE.name} en la puerta de ${CLUB.meetingPoint}`}
+    />
     <meta property="og:locale" content="es_ES" />
+
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Las teselas del mapa se piden al hacer scroll: adelantar el handshake
+         ahorra el DNS y el TLS cuando llega el momento -->
+    <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin />
 
     <Font cssVariable="--font-anton" preload />
     <Font cssVariable="--font-inter" preload />

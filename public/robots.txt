@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://letigre.run/sitemap-index.xml
