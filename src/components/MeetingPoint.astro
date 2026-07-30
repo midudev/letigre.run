@@ -66,7 +66,7 @@ import tienda from '@/assets/letigre-tienda.png'
       </div>
     </Reveal>
 
-    <Reveal delay={120}>
+    <Reveal order={1}>
       <div
         class="relative overflow-hidden rounded-[2rem] border-2 border-brand/40 shadow-[0_0_60px_-15px] shadow-brand/30"
       >
@@ -139,22 +139,21 @@ import tienda from '@/assets/letigre-tienda.png'
   </template>
 </section>
 
-<script>
-  const container = document.querySelector<HTMLElement>('[data-map]')
-  const popupTemplate =
-    document.querySelector<HTMLTemplateElement>('[data-map-popup]')
+<!-- `is:inline` para que este arranque viaje en el propio HTML y no genere un
+     archivo aparte en la cadena de peticiones. Por eso MapLibre y su CSS se
+     piden por URL fija (los copia `pnpm sync:maplibre`) en lugar de importarse:
+     un import los metería en el grafo de Vite y volvería a sacar el script. -->
+<script is:inline>
+  const container = document.querySelector('[data-map]')
+  const popupTemplate = document.querySelector('[data-map-popup]')
 
   if (container) {
     const lat = Number(container.dataset.lat)
     const lng = Number(container.dataset.lng)
     const ink = container.dataset.ink ?? '#000'
 
-    // El CSS de MapLibre son 10 KB que sólo hacen falta si se ve el mapa. Se
-    // inyecta como <link> en vez de importarlo: un `import` lo metería en el
-    // bundle de la página y bloquearía el primer render. El fichero lo copia
-    // `pnpm sync:maplibre-css` desde node_modules (ver package.json).
     const loadMapStyles = () =>
-      new Promise<void>((resolve) => {
+      new Promise((resolve) => {
         const href = '/vendor/maplibre-gl.css'
         if (document.querySelector(`link[href="${href}"]`)) return resolve()
 
@@ -166,14 +165,14 @@ import tienda from '@/assets/letigre-tienda.png'
         document.head.append(link)
       })
 
-    // MapLibre pesa bastante: sólo se descarga cuando el bloque entra en pantalla
+    // MapLibre son ~550 KB: sólo se piden cuando el bloque entra en pantalla
     const observer = new IntersectionObserver(
       async (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return
         observer.disconnect()
 
         const [{ Map, Marker, Popup }] = await Promise.all([
-          import('maplibre-gl'),
+          import('/vendor/maplibre-gl.mjs'),
           loadMapStyles()
         ])
 

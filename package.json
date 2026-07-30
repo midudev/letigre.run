@@ -11,9 +11,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "deploy": "astro build && wrangler deploy",
-    "sync:maplibre-css": "node scripts/sync-maplibre-css.mjs",
-    "prebuild": "pnpm sync:maplibre-css",
-    "predev": "pnpm sync:maplibre-css"
+    "prebuild": "pnpm sync:maplibre",
+    "predev": "pnpm sync:maplibre",
+    "sync:maplibre": "node scripts/sync-maplibre.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
