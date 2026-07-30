@@ -13,7 +13,8 @@
     "deploy": "astro build && wrangler deploy",
     "map": "node scripts/build-static-map.mjs",
     "images": "node scripts/optimize-images.mjs",
-    "logos": "node scripts/optimize-logos.mjs"
+    "logos": "node scripts/optimize-logos.mjs",
+    "posters": "node scripts/extract-video-posters.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
