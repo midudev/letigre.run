@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets'
-import { CLUB, LINKS } from '@/consts'
+import { CLUB, COLORS, LINKS } from '@/consts'
 import Reveal from '@/components/Reveal.astro'
 import tienda from '@/assets/letigre-tienda.png'
 ---
@@ -77,6 +77,7 @@ import tienda from '@/assets/letigre-tienda.png'
           data-map
           data-lat={CLUB.coords.lat}
           data-lng={CLUB.coords.lng}
+          data-ink={COLORS.ink}
         >
           <div
             class="flex size-full flex-col items-center justify-center gap-3 text-brand/70"
@@ -139,8 +140,6 @@ import tienda from '@/assets/letigre-tienda.png'
 </section>
 
 <script>
-  import { COLORS } from '@/consts'
-
   const container = document.querySelector<HTMLElement>('[data-map]')
   const popupTemplate =
     document.querySelector<HTMLTemplateElement>('[data-map-popup]')
@@ -148,6 +147,24 @@ import tienda from '@/assets/letigre-tienda.png'
   if (container) {
     const lat = Number(container.dataset.lat)
     const lng = Number(container.dataset.lng)
+    const ink = container.dataset.ink ?? '#000'
+
+    // El CSS de MapLibre son 10 KB que sólo hacen falta si se ve el mapa. Se
+    // inyecta como <link> en vez de importarlo: un `import` lo metería en el
+    // bundle de la página y bloquearía el primer render. El fichero lo copia
+    // `pnpm sync:maplibre-css` desde node_modules (ver package.json).
+    const loadMapStyles = () =>
+      new Promise<void>((resolve) => {
+        const href = '/vendor/maplibre-gl.css'
+        if (document.querySelector(`link[href="${href}"]`)) return resolve()
+
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = href
+        link.addEventListener('load', () => resolve(), { once: true })
+        link.addEventListener('error', () => resolve(), { once: true })
+        document.head.append(link)
+      })
 
     // MapLibre pesa bastante: sólo se descarga cuando el bloque entra en pantalla
     const observer = new IntersectionObserver(
@@ -155,8 +172,10 @@ import tienda from '@/assets/letigre-tienda.png'
         if (!entries.some((entry) => entry.isIntersecting)) return
         observer.disconnect()
 
-        const { Map, Marker, Popup } = await import('maplibre-gl')
-        await import('maplibre-gl/dist/maplibre-gl.css')
+        const [{ Map, Marker, Popup }] = await Promise.all([
+          import('maplibre-gl'),
+          loadMapStyles()
+        ])
 
         container.querySelector('[data-map-placeholder]')?.remove()
 
@@ -184,7 +203,7 @@ import tienda from '@/assets/letigre-tienda.png'
               {
                 id: 'bg',
                 type: 'background',
-                paint: { 'background-color': COLORS.ink }
+                paint: { 'background-color': ink }
               },
               { id: 'carto', type: 'raster', source: 'carto' }
             ]
