@@ -4,7 +4,9 @@ import { defineConfig, fontProviders } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
+// Static by default (no SSR adapter). Cloudflare serves `dist/` via Workers Assets.
 export default defineConfig({
+  output: 'static',
   fonts: [
     {
       // Títulos

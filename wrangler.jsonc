@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Static Astro site: no Worker code, only assets from `astro build`.
+  "name": "letigre-run",
+  "compatibility_date": "2026-07-30",
+  "assets": {
+    // Output of `astro build` (static HTML, CSS, JS, images, videos).
+    "directory": "./dist"
+  }
+}
+
