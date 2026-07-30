@@ -34,10 +34,10 @@ const groups = [0, 1]
 const repeated = [items, items, items].flat()
 ---
 
-<!-- La cinta inclinada tiene que ser más ancha que la pantalla para que no se
+{/* La cinta inclinada tiene que ser más ancha que la pantalla para que no se
      destapen las esquinas, así que sobresale por los lados. Este envoltorio
      recorta ese exceso: `overflow-x: clip` corta a lo ancho sin tocar el alto,
-     que la rotación necesita libre. Sin él, el sobrante genera scroll lateral. -->
+     que la rotación necesita libre. Sin él, el sobrante genera scroll lateral. */}
 <div class:list={['relative overflow-x-clip', className]}>
   <div
     class:list={[

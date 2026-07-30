@@ -66,14 +66,18 @@ import Reveal from '@/components/Reveal.astro'
     </Reveal>
 
     <Reveal order={1}>
-      <!-- Mapa estático generado con `pnpm map` + `pnpm images`. Antes montaba
-           MapLibre (~550 KB) para un mapa que nadie mueve. -->
+      {/* Mapa estático generado con `pnpm map` + `pnpm images`. Antes montaba
+           MapLibre (~550 KB) para un mapa que nadie mueve. */}
       <a
         href={LINKS.directions}
         target="_blank"
         rel="noopener noreferrer"
         class="group relative block overflow-hidden rounded-[2rem] border-2 border-brand/40 shadow-[0_0_60px_-15px] shadow-brand/30"
       >
+        {/* En móvil el pin va más abajo (~72%) para que el tooltip con foto
+             quepa encima sin recortarse. El mapa se escala y baja el mismo
+             porcentaje para que el punto geográfico siga bajo el pin. En
+             `md+` todo vuelve al centro (el script del mapa lo deja ahí). */}
         <Picture
           src="/images/map/map"
           widths={[400, 600, 900, 1200]}
@@ -81,12 +85,11 @@ import Reveal from '@/components/Reveal.astro'
           height={1200}
           alt={`Mapa del punto de encuentro: ${CLUB.street}, ${CLUB.city}`}
           sizes="(min-width: 768px) 50vw, 100vw"
-          class="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          class="aspect-square w-full object-cover transition-transform duration-700 max-md:translate-y-[22%] max-md:scale-[1.45] md:group-hover:scale-105"
         />
 
-        <!-- El script del mapa deja el punto en el centro exacto -->
         <span
-          class="pointer-events-none absolute top-1/2 left-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center"
+          class="pointer-events-none absolute top-[72%] left-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center md:top-1/2"
         >
           <span
             class="animate-pulse-ring col-start-1 row-start-1 size-12 rounded-full bg-brand/35"
@@ -96,12 +99,12 @@ import Reveal from '@/components/Reveal.astro'
           ></span>
         </span>
 
-        <!-- Crece hacia ARRIBA desde el marcador: hacia abajo se salía del
-             recorte del mapa en las pantallas estrechas -->
+        {/* Crece hacia ARRIBA desde el marcador: hacia abajo se salía del
+             recorte del mapa en las pantallas estrechas */}
         <span
-          class="pointer-events-none absolute bottom-1/2 left-1/2 mb-7 block w-48 -translate-x-1/2 rounded-2xl border-2 border-brand/55 bg-ink-950/95 p-2.5 shadow-[0_18px_45px_-12px_rgb(0_0_0/0.8)] sm:w-52"
+          class="pointer-events-none absolute bottom-[28%] left-1/2 mb-7 block w-48 -translate-x-1/2 rounded-2xl border-2 border-brand/55 bg-ink-950/95 p-2.5 shadow-[0_18px_45px_-12px_rgb(0_0_0/0.8)] sm:w-52 md:bottom-1/2"
         >
-          <!-- Punta del bocadillo, apuntando al pin de debajo -->
+          {/* Punta del bocadillo, apuntando al pin de debajo */}
           <span
             aria-hidden="true"
             class="absolute bottom-0 left-1/2 z-10 size-3 -translate-x-1/2 translate-y-[calc(50%-1px)] rotate-45 border-r-2 border-b-2 border-brand/55 bg-ink-950"

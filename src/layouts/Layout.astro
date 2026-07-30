@@ -1,7 +1,7 @@
 ---
-import { Font } from 'astro:assets'
-import { COLORS, FAQ, LINKS, SITE, CLUB } from '@/consts'
-import '@/styles/global.css'
+import { Font } from "astro:assets"
+import { COLORS, FAQ, LINKS, SITE, CLUB } from "@/consts"
+import "@/styles/global.css"
 
 interface Props {
   title?: string
@@ -14,88 +14,88 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
 
 /** 1200×630: tamaño recomendado por Facebook/LinkedIn/X para previews */
 const OG_IMAGE = {
-  path: '/og.jpg',
+  path: "/og.jpg",
   width: 1200,
   height: 630,
-  type: 'image/jpeg',
-  alt: `El grupo de ${SITE.name} en la puerta de ${CLUB.meetingPoint}`
+  type: "image/jpeg",
+  alt: `El grupo de ${SITE.name} en la puerta de ${CLUB.meetingPoint}`,
 } as const
 
 const ogImageUrl = new URL(OG_IMAGE.path, Astro.site).href
 
 const structuredData = {
-  '@context': 'https://schema.org',
-  '@graph': [
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      '@type': 'SportsClub',
-      '@id': `${Astro.site}#club`,
+      "@type": "SportsClub",
+      "@id": `${Astro.site}#club`,
       url: canonical.href,
       name: SITE.name,
       description: SITE.description,
-      sport: 'Running',
+      sport: "Running",
       image: {
-        '@type': 'ImageObject',
+        "@type": "ImageObject",
         url: ogImageUrl,
         width: OG_IMAGE.width,
         height: OG_IMAGE.height,
         encodingFormat: OG_IMAGE.type,
-        caption: OG_IMAGE.alt
+        caption: OG_IMAGE.alt,
       },
       address: {
-        '@type': 'PostalAddress',
+        "@type": "PostalAddress",
         streetAddress: CLUB.street,
         postalCode: CLUB.postalCode,
         addressLocality: CLUB.city,
-        addressCountry: 'ES'
+        addressCountry: "ES",
       },
       geo: {
-        '@type': 'GeoCoordinates',
+        "@type": "GeoCoordinates",
         latitude: CLUB.coords.lat,
-        longitude: CLUB.coords.lng
+        longitude: CLUB.coords.lng,
       },
       // Los sábados a las 8:00, todas las semanas
       openingHoursSpecification: {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'https://schema.org/Saturday',
-        opens: CLUB.time
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: "https://schema.org/Saturday",
+        opens: CLUB.time,
       },
-      sameAs: [LINKS.instagram, LINKS.strava, LINKS.whatsapp]
+      sameAs: [LINKS.instagram, LINKS.strava, LINKS.whatsapp],
     },
     {
-      '@type': 'WebSite',
-      '@id': `${Astro.site}#website`,
+      "@type": "WebSite",
+      "@id": `${Astro.site}#website`,
       url: Astro.site?.href,
       name: SITE.name,
       description: SITE.description,
-      inLanguage: 'es-ES',
-      publisher: { '@id': `${Astro.site}#club` },
-      image: ogImageUrl
+      inLanguage: "es-ES",
+      publisher: { "@id": `${Astro.site}#club` },
+      image: ogImageUrl,
     },
     {
-      '@type': 'WebPage',
-      '@id': `${canonical.href}#webpage`,
+      "@type": "WebPage",
+      "@id": `${canonical.href}#webpage`,
       url: canonical.href,
       name: title,
       description,
-      isPartOf: { '@id': `${Astro.site}#website` },
-      about: { '@id': `${Astro.site}#club` },
+      isPartOf: { "@id": `${Astro.site}#website` },
+      about: { "@id": `${Astro.site}#club` },
       primaryImageOfPage: {
-        '@type': 'ImageObject',
+        "@type": "ImageObject",
         url: ogImageUrl,
         width: OG_IMAGE.width,
-        height: OG_IMAGE.height
+        height: OG_IMAGE.height,
       },
-      inLanguage: 'es-ES'
+      inLanguage: "es-ES",
     },
     {
-      '@type': 'FAQPage',
+      "@type": "FAQPage",
       mainEntity: FAQ.map((item) => ({
-        '@type': 'Question',
+        "@type": "Question",
         name: item.question,
-        acceptedAnswer: { '@type': 'Answer', text: item.answer }
-      }))
-    }
-  ]
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+      })),
+    },
+  ],
 }
 ---
 
@@ -107,7 +107,6 @@ const structuredData = {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content={COLORS.ink} />
 
     <title>{title}</title>
@@ -121,7 +120,7 @@ const structuredData = {
     <meta property="og:description" content={description} />
     <meta property="og:locale" content="es_ES" />
 
-    <!-- Imagen social absoluta: crawlers de WhatsApp, iMessage, X, LinkedIn… -->
+    {/* Imagen social absoluta: crawlers de WhatsApp, iMessage, X, LinkedIn… */}
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:secure_url" content={ogImageUrl} />
     <meta property="og:image:type" content={OG_IMAGE.type} />
@@ -135,8 +134,18 @@ const structuredData = {
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="twitter:image:alt" content={OG_IMAGE.alt} />
 
-    <!-- El póster del vídeo del hero es el elemento más grande de la primera
-         pantalla (el LCP): pedirlo cuanto antes adelanta el pintado -->
+    {
+      /* Anton = titulares del hero (font-display). Preload prioritario: sin él
+         el H1 hace FOUT o retraso de pintura. Inter va sin preload a propósito
+         para no competir en la ruta crítica con Anton ni con el póster. */
+    }
+    <Font cssVariable="--font-anton" preload />
+    <Font cssVariable="--font-inter" />
+
+    {
+      /* El póster del vídeo del hero es el elemento más grande de la primera
+         pantalla (el LCP): pedirlo cuanto antes adelanta el pintado */
+    }
     <link
       rel="preload"
       as="image"
@@ -144,13 +153,6 @@ const structuredData = {
       type="image/webp"
       fetchpriority="high"
     />
-
-    <!-- Sólo la resolución DNS: las teselas del mapa se piden mucho después de
-         la carga, así que un `preconnect` mantendría una conexión sin usar -->
-    <link rel="dns-prefetch" href="https://basemaps.cartocdn.com" />
-
-    <Font cssVariable="--font-anton" preload />
-    <Font cssVariable="--font-inter" preload />
 
     <script
       type="application/ld+json"

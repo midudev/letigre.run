@@ -30,6 +30,8 @@ const {
 } = Astro.props
 
 const base = `/videos/web/${name}`
+const objectPos =
+  focus === 'bottom' ? 'object-bottom sm:object-center' : 'object-center'
 ---
 
 <article
@@ -40,14 +42,31 @@ const base = `/videos/web/${name}`
     <div
       class="relative overflow-hidden rounded-[2rem] border-2 border-brand/40 bg-ink-800 shadow-[0_0_60px_-15px] shadow-brand/30"
     >
-      <!-- Cuadrado en móvil: un 9/16 a pantalla completa obliga a scrollear el
-           vídeo entero. En tablet y escritorio ya cabe vertical. -->
+      {/* Cuadrado en móvil: un 9/16 a pantalla completa obliga a scrollear el
+           vídeo entero. En tablet y escritorio ya cabe vertical. */}
+      {/*
+        Poster en capa propia (no el attr `poster` del <video>).
+        En Mobile Safari, al llamar play() el poster nativo se quita ANTES de
+        pintar el primer frame → flash negro. El <img> se queda encima hasta
+        que hay frame real y entonces se funde.
+      */}
+      <img
+        src={`${base}.webp`}
+        alt=""
+        aria-hidden="true"
+        decoding="async"
+        draggable="false"
+        class:list={[
+          'pointer-events-none absolute inset-0 z-10 size-full object-cover transition-opacity duration-300 ease-out',
+          objectPos
+        ]}
+        data-video-poster
+      />
       <video
         class:list={[
-          'aspect-square w-full object-cover sm:aspect-[9/16]',
-          focus === 'bottom' ? 'object-bottom sm:object-center' : 'object-center'
+          'aspect-square w-full bg-transparent object-cover sm:aspect-[9/16]',
+          objectPos
         ]}
-        poster={`${base}.webp`}
         muted
         loop
         playsinline
@@ -57,13 +76,13 @@ const base = `/videos/web/${name}`
         aria-label={title}
         data-scroll-video
       >
-        <!-- Sólo MP4: probado VP9/WebM y a igual tamaño daba peor SSIM que
-             x264 con este material (mucho grano y movimiento). -->
+        {/* Sólo MP4: probado VP9/WebM y a igual tamaño daba peor SSIM que
+             x264 con este material (mucho grano y movimiento). */}
         <source src={`${base}.mp4`} type="video/mp4" />
       </video>
 
-      <!-- Barra de progreso del clip -->
-      <div class="absolute inset-x-0 bottom-0 h-1 bg-ink-950/50">
+      {/* Barra de progreso del clip */}
+      <div class="absolute inset-x-0 bottom-0 z-20 h-1 bg-ink-950/50">
         <div class="h-full w-0 bg-brand" data-video-progress></div>
       </div>
     </div>
@@ -100,14 +119,78 @@ const base = `/videos/web/${name}`
   const videos =
     document.querySelectorAll<HTMLVideoElement>('[data-scroll-video]')
 
-  // Cada vídeo arranca al entrar en pantalla y se pausa al salir, así solo se
-  // descarga (`preload="none"`) lo que el usuario llega a ver.
-  const observer = new IntersectionObserver(
+  /** Quita el poster en capa cuando el vídeo ya ha pintado un frame real. */
+  function armPosterHandoff(video: HTMLVideoElement) {
+    const poster = video.parentElement?.querySelector<HTMLElement>(
+      '[data-video-poster]'
+    )
+    // `arming` evita apilar callbacks si el clip entra/sale del viewport
+    // varias veces antes del primer frame.
+    if (
+      !poster ||
+      poster.dataset.handedOff === '1' ||
+      poster.dataset.arming === '1'
+    ) {
+      return
+    }
+    poster.dataset.arming = '1'
+
+    const handoff = () => {
+      if (poster.dataset.handedOff === '1') return
+      poster.dataset.handedOff = '1'
+      poster.classList.add('opacity-0')
+      // Tras el fade el <img> ya no aporta nada; lo sacamos del árbol de capas
+      // para que no compita con el vídeo en el compositor de Safari.
+      poster.addEventListener(
+        'transitionend',
+        () => {
+          poster.hidden = true
+        },
+        { once: true }
+      )
+    }
+
+    // requestVideoFrameCallback = “hay píxeles del vídeo en pantalla”.
+    // Fallback: doble rAF tras `playing` para dejar que el compositor pinte.
+    const v = video as HTMLVideoElement & {
+      requestVideoFrameCallback?: (cb: () => void) => number
+    }
+
+    if (typeof v.requestVideoFrameCallback === 'function') {
+      v.requestVideoFrameCallback(() => {
+        requestAnimationFrame(handoff)
+      })
+    } else {
+      const onPlaying = () => {
+        requestAnimationFrame(() => requestAnimationFrame(handoff))
+        video.removeEventListener('playing', onPlaying)
+      }
+      video.addEventListener('playing', onPlaying)
+    }
+  }
+
+  // Empieza a bajar el MP4 un poco antes de entrar del todo, para que al
+  // hacer play el primer frame llegue casi al momento y el handoff sea limpio.
+  const warmer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        const video = entry.target as HTMLVideoElement
+        video.preload = 'auto'
+        warmer.unobserve(video)
+      }
+    },
+    { rootMargin: '40% 0px' }
+  )
+
+  // Cada vídeo arranca al entrar en pantalla y se pausa al salir.
+  const player = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
         const video = entry.target as HTMLVideoElement
 
         if (entry.isIntersecting) {
+          armPosterHandoff(video)
           video.play().catch(() => {
             // Autoplay bloqueado (p.ej. ahorro de datos): se queda el poster
           })
@@ -120,7 +203,8 @@ const base = `/videos/web/${name}`
   )
 
   for (const video of videos) {
-    observer.observe(video)
+    warmer.observe(video)
+    player.observe(video)
 
     const progress = video
       .closest('[data-scroll-video-section]')

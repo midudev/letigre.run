@@ -7,28 +7,39 @@ import SocialLinks from '@/components/SocialLinks.astro'
 ---
 
 <header class="relative isolate min-h-[100svh] overflow-hidden pb-10">
-  <!-- Fondo: la salida del sábado. El poster es el LCP, así que se pinta ya y
-       el vídeo se descarga después sin competir con él. En móvil se sirve un
-       archivo de menos de un mega. -->
-  <video
-    class="absolute inset-0 -z-20 size-full object-cover"
-    poster="/videos/web/hero.webp"
-    muted
-    loop
-    playsinline
-    preload="none"
-    aria-hidden="true"
-    data-hero-video
-  >
-    <source
-      src="/videos/web/hero-sm.mp4"
-      type="video/mp4"
-      media="(max-width: 640px)"
+  {/* Fondo: la salida del sábado. El poster es el LCP (img propia, no el
+       attr `poster` del <video>): en Mobile Safari ese attr se quita al
+       play() antes del primer frame → flash negro. El <img> va ENCIMA del
+       vídeo y se funde solo cuando hay frame real. El MP4 se descarga
+       después sin competir con el LCP; en móvil es <1 MB. */}
+  <div class="absolute inset-0 -z-20" aria-hidden="true">
+    <video
+      class="absolute inset-0 size-full bg-transparent object-cover"
+      muted
+      loop
+      playsinline
+      preload="none"
+      data-hero-video
+    >
+      <source
+        src="/videos/web/hero-sm.mp4"
+        type="video/mp4"
+        media="(max-width: 640px)"
+      />
+      <source src="/videos/web/hero.mp4" type="video/mp4" />
+    </video>
+    <img
+      src="/videos/web/hero.webp"
+      alt=""
+      fetchpriority="high"
+      decoding="sync"
+      draggable="false"
+      class="pointer-events-none absolute inset-0 size-full object-cover transition-opacity duration-500 ease-out"
+      data-hero-poster
     />
-    <source src="/videos/web/hero.mp4" type="video/mp4" />
-  </video>
+  </div>
 
-  <!-- Velo suave: sólo el necesario para que el texto se lea sobre el vídeo -->
+  {/* Velo suave: sólo el necesario para que el texto se lea sobre el vídeo */}
   <div
     aria-hidden="true"
     class="absolute inset-0 -z-10 bg-gradient-to-b from-ink-950/75 via-ink-950/35 to-transparent"
@@ -40,10 +51,10 @@ import SocialLinks from '@/components/SocialLinks.astro'
   >
   </div>
 
-  <!-- El vídeo se disuelve en un tramado de puntos que crecen hasta el negro -->
+  {/* El vídeo se disuelve en un tramado de puntos que crecen hasta el negro */}
   <HalftoneFade class="-z-10 h-[80%]" />
 
-  <!-- Tigre gigante de fondo -->
+  {/* Tigre gigante de fondo */}
   <Logo
     variant="cat"
     class="pointer-events-none absolute -top-10 -right-24 -z-10 w-[70vw] max-w-lg text-brand/10"
@@ -69,7 +80,7 @@ import SocialLinks from '@/components/SocialLinks.astro'
         >. Nosotros ponemos el café y los croissants, y tú pones el running.
       </p>
 
-      <!-- Redes a la izquierda, próxima salida al otro extremo de la misma línea -->
+      {/* Redes a la izquierda, próxima salida al otro extremo de la misma línea */}
       <div
         class="mt-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10"
       >
@@ -77,9 +88,9 @@ import SocialLinks from '@/components/SocialLinks.astro'
         <NextRun alignEnd />
       </div>
 
-      <!-- Datos clave de la salida. En móvil sólo caben dos columnas sin que
+      {/* Datos clave de la salida. En móvil sólo caben dos columnas sin que
            "Sábados 8:00" parta en dos líneas: el precio es un guiño y se
-           reserva para pantallas a partir de tablet. -->
+           reserva para pantallas a partir de tablet. */}
       <dl
         class="mt-10 grid grid-cols-2 gap-4 border-t-2 border-brand/25 pt-5 sm:grid-cols-3"
       >
@@ -114,6 +125,7 @@ import SocialLinks from '@/components/SocialLinks.astro'
 
 <script>
   const video = document.querySelector<HTMLVideoElement>('[data-hero-video]')
+  const poster = document.querySelector<HTMLElement>('[data-hero-poster]')
 
   if (video) {
     const connection = (navigator as any).connection
@@ -121,12 +133,47 @@ import SocialLinks from '@/components/SocialLinks.astro'
     const slowNetwork = /^(slow-)?2g$/.test(connection?.effectiveType ?? '')
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
 
+    const handoffPoster = () => {
+      if (!poster || poster.dataset.handedOff === '1') return
+      poster.dataset.handedOff = '1'
+      poster.classList.add('opacity-0')
+      poster.addEventListener(
+        'transitionend',
+        () => {
+          poster.hidden = true
+        },
+        { once: true }
+      )
+    }
+
+    const armPosterHandoff = () => {
+      if (!poster || poster.dataset.arming === '1') return
+      poster.dataset.arming = '1'
+
+      const v = video as HTMLVideoElement & {
+        requestVideoFrameCallback?: (cb: () => void) => number
+      }
+
+      if (typeof v.requestVideoFrameCallback === 'function') {
+        v.requestVideoFrameCallback(() => {
+          requestAnimationFrame(handoffPoster)
+        })
+      } else {
+        const onPlaying = () => {
+          requestAnimationFrame(() => requestAnimationFrame(handoffPoster))
+          video.removeEventListener('playing', onPlaying)
+        }
+        video.addEventListener('playing', onPlaying)
+      }
+    }
+
     // Con ahorro de datos, red lenta o animaciones reducidas se queda el poster:
     // el hero se ve igual de bien y no se gastan megas a lo tonto
     if (!savesData && !slowNetwork && !reducedMotion) {
       // Se arranca tras el primer pintado para no competir con el LCP
       const start = () => {
         video.preload = 'auto'
+        armPosterHandoff()
         video.play().catch(() => {
           // Autoplay bloqueado: se queda el poster
         })

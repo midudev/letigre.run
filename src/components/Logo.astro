@@ -20,9 +20,9 @@ const VARIANTS = { cat: CatOnly, badge: CatBadge, croissant: Croissant }
 const Svg = VARIANTS[variant]
 ---
 
-<!-- Los SVG traen `width`/`height` de Illustrator: `h-auto` deja que la altura
+{/* Los SVG traen `width`/`height` de Illustrator: `h-auto` deja que la altura
      la marque el viewBox cuando el ancho se fija por CSS. Los trazos usan
-     `currentColor`, así que el color se hereda con `text-*`. -->
+     `currentColor`, así que el color se hereda con `text-*`. */}
 <Svg
   class:list={['h-auto', className]}
   role={title ? 'img' : undefined}

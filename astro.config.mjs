@@ -41,9 +41,6 @@ export default defineConfig({
       provider: fontProviders.google(),
       name: 'Inter',
       cssVariable: '--font-inter',
-      // Medido: la variable subseteada a latin pesa 48.432 B y los estáticos 400
-      // y 600 de Fontsource suman 48.116 B. Son 316 bytes menos a cambio de una
-      // petición y un preload más, así que gana la variable.
       weights: ['100 900'],
       styles: ['normal'],
       subsets: ['latin'],
