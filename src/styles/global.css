@@ -90,14 +90,33 @@
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
+    /* En `html` además de en `body`: si sólo está en `body`, lo que sobresale
+       sigue generando scroll lateral en el viewport */
+    overflow-x: clip;
+    /* Sin esto, un ancla lleva el destino justo al borde superior */
+    scroll-padding-top: 2rem;
+    /* Evita que iOS agrande el texto al girar el móvil */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
     background-color: var(--color-ink-950);
     color: white;
     font-family: var(--font-sans);
-    /* Evita scroll horizontal por los marquees y textos rotados */
     overflow-x: clip;
+
+    /* Suavizado coherente entre plataformas */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Inter: la `a` y la `g` de una sola planta y la `l` con cola se leen
+       mejor en pantallas pequeñas que las formas de doble planta */
+    font-feature-settings:
+      'cv05' 1,
+      'cv08' 1,
+      'cv11' 1;
+    font-optical-sizing: auto;
   }
 
   ::selection {
@@ -112,6 +131,40 @@
     text-transform: uppercase;
     line-height: 0.9;
     letter-spacing: 0.01em;
+    /* Anton es muy condensada: en mayúsculas y a tamaño grande, las ligaduras
+       y el kerning por defecto juntan demasiado ciertos pares */
+    font-kerning: normal;
+    /* Reparte los titulares en líneas de longitud parecida */
+    text-wrap: balance;
+  }
+
+  /* Evita palabras huérfanas al final de los párrafos */
+  p,
+  li,
+  dd,
+  figcaption,
+  summary {
+    text-wrap: pretty;
+  }
+
+  /* Las horas, fechas y kilómetros no bailan de ancho al actualizarse */
+  time,
+  [data-tabular] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Objetivos táctiles cómodos en móvil sin tocar el diseño de escritorio */
+  @media (pointer: coarse) {
+    a,
+    button,
+    summary {
+      min-height: 44px;
+    }
+
+    summary,
+    a:not([class*='inline']) {
+      touch-action: manipulation;
+    }
   }
 }
 
