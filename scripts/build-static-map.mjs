@@ -126,7 +126,7 @@ try {
     '(',
     '-size',
     '1x256',
-    'gradient:#c9f78a-#06030b',
+    'gradient:#06030b-#c9f78a',
     ')',
     '-clut',
     '-strip',
