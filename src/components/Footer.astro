@@ -1,5 +1,5 @@
 ---
-import { CLUB, SITE } from '../consts'
+import { CLUB, LINKS, SITE } from '../consts'
 import Logo from './Logo.astro'
 import Reveal from './Reveal.astro'
 import SocialLinks from './SocialLinks.astro'
@@ -35,10 +35,12 @@ import SocialLinks from './SocialLinks.astro'
       </address>
 
       <a
-        href="#donde"
+        href={LINKS.directions}
+        target="_blank"
+        rel="noopener noreferrer"
         class="mt-2 inline-flex items-center gap-1.5 text-sm text-brand underline decoration-brand/40 underline-offset-4 hover:decoration-brand"
       >
-        Ver cómo llegar
+        Ver cómo llegar en Google Maps
       </a>
 
       <SocialLinks variant="inline" class="mt-8" />

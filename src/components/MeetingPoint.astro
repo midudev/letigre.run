@@ -276,10 +276,29 @@ import tienda from '../assets/letigre-tienda.png'
     box-shadow: 0 18px 45px -12px rgb(0 0 0 / 0.8);
   }
 
+  /* MapLibre dibuja el pico con bordes y pinta de blanco sólo el que apunta al
+     marcador, que cambia según de qué lado salga el bocadillo. */
   .letigre-popup .maplibregl-popup-tip {
-    border-top-color: var(--color-brand);
+    border-width: 9px;
+  }
+
+  .letigre-popup.maplibregl-popup-anchor-top .maplibregl-popup-tip,
+  .letigre-popup.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+  .letigre-popup.maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
     border-bottom-color: var(--color-brand);
-    border-top-width: 10px;
-    border-bottom-width: 10px;
+  }
+
+  .letigre-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+  .letigre-popup.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+  .letigre-popup.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+    border-top-color: var(--color-brand);
+  }
+
+  .letigre-popup.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+    border-right-color: var(--color-brand);
+  }
+
+  .letigre-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+    border-left-color: var(--color-brand);
   }
 </style>
