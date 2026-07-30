@@ -57,9 +57,8 @@ const base = `/videos/web/${name}`
         aria-label={title}
         data-scroll-video
       >
-        <!-- WebM primero: pesa la mitad que el MP4 a igual calidad. El MP4
-             queda como respaldo para navegadores sin VP9. -->
-        <source src={`${base}.webm`} type="video/webm" />
+        <!-- Sólo MP4: probado VP9/WebM y a igual tamaño daba peor SSIM que
+             x264 con este material (mucho grano y movimiento). -->
         <source src={`${base}.mp4`} type="video/mp4" />
       </video>
 
@@ -80,7 +79,7 @@ const base = `/videos/web/${name}`
     }
   </Reveal>
 
-  <Reveal delay={120} class:list={[flip && 'md:order-1']}>
+  <Reveal order={1} class:list={[flip && 'md:order-1']}>
     <p
       class="font-display text-sm tracking-[0.25em] text-brand uppercase md:text-base"
     >
