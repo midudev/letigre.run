@@ -267,6 +267,43 @@
   .card-photo {
     @apply relative overflow-hidden rounded-3xl border-2 border-brand/25;
   }
+
+  /* —— Marquee: se repite N×items en el HTML, conviene clases cortas —— */
+  .marquee {
+    @apply relative flex overflow-hidden py-3;
+  }
+
+  .marquee--solid {
+    @apply bg-brand text-ink-950;
+  }
+
+  .marquee--ghost {
+    @apply border-y border-brand/25 bg-ink-900 text-brand;
+  }
+
+  .marquee__track {
+    @apply flex min-w-full shrink-0 items-center justify-around gap-5 will-change-transform;
+  }
+
+  .marquee__item {
+    @apply flex shrink-0 items-center gap-5;
+  }
+
+  .marquee__text {
+    @apply font-display text-xl whitespace-nowrap uppercase sm:text-2xl;
+  }
+
+  .marquee__dot {
+    @apply size-1.5 shrink-0 rotate-45;
+  }
+
+  .marquee--solid .marquee__dot {
+    @apply bg-ink-950/40;
+  }
+
+  .marquee--ghost .marquee__dot {
+    @apply bg-brand/40;
+  }
 }
 
 /*
