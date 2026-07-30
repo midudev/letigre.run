@@ -1,0 +1,63 @@
+---
+import { FAQ } from '../consts'
+import Reveal from './Reveal.astro'
+---
+
+<section id="faq" class="mx-auto max-w-6xl px-5 py-20 sm:py-28">
+  <Reveal>
+    <p
+      class="font-display text-sm tracking-[0.25em] text-brand uppercase sm:text-base"
+    >
+      Preguntas frecuentes
+    </p>
+    <h2 class="mt-3 text-4xl text-balance sm:text-5xl lg:text-6xl">
+      Lo que suele<br />
+      <span class="text-brand">preguntar la gente</span>
+    </h2>
+    <p
+      class="mt-5 max-w-prose text-base/relaxed text-white/70 md:text-lg/relaxed"
+    >
+      Si es tu primera vez, esto te saca de dudas. Y si no encuentras lo que
+      buscas, pregúntanos en el grupo de WhatsApp.
+    </p>
+  </Reveal>
+
+  <div class="mt-10 divide-y divide-brand/15 border-y border-brand/15">
+    {
+      FAQ.map((item, index) => (
+        <Reveal delay={index * 40}>
+          <details class="group faq-item">
+            <summary
+              class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left outline-none transition-colors select-none hover:text-brand focus-visible:text-brand sm:py-6 [&::-webkit-details-marker]:hidden"
+            >
+              <span class="font-display text-lg leading-tight uppercase sm:text-xl md:text-2xl">
+                {item.question}
+              </span>
+              <span
+                aria-hidden="true"
+                class="flex size-9 shrink-0 items-center justify-center rounded-full border border-brand/35 text-brand transition-transform duration-300 group-open:rotate-45 group-open:border-brand group-open:bg-brand group-open:text-ink-950"
+              >
+                <svg
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  class="size-4"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M8 2.5v11M2.5 8h11"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+            </summary>
+            <p class="max-w-prose pb-5 text-base/relaxed text-white/70 sm:pb-6 md:text-lg/relaxed">
+              {item.answer}
+            </p>
+          </details>
+        </Reveal>
+      ))
+    }
+  </div>
+</section>

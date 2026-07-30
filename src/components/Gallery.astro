@@ -3,16 +3,10 @@ import { Image } from 'astro:assets'
 import Reveal from './Reveal.astro'
 import avion from '../assets/letigre-avion.jpg'
 import playa from '../assets/letigre-playa.jpg'
-import tienda from '../assets/letigre-tienda.png'
 import tienda2 from '../assets/letigre-tienda-2.png'
 
+// La foto de la fachada no está aquí: ya sale en el bocadillo del mapa
 const photos = [
-  {
-    src: tienda,
-    alt: 'El grupo del club posando delante de la fachada de Le Tigré Cakes',
-    caption: 'Punto de encuentro: la puerta de Le Tigré Cakes.',
-    featured: true
-  },
   {
     src: avion,
     alt: 'El grupo calentando junto a la pista del aeropuerto mientras aterriza un avión',

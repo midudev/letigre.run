@@ -1,6 +1,6 @@
 ---
 import { Font } from 'astro:assets'
-import { COLORS, LINKS, SITE, CLUB } from '../consts'
+import { COLORS, FAQ, LINKS, SITE, CLUB } from '../consts'
 import '../styles/global.css'
 
 interface Props {
@@ -12,16 +12,41 @@ const { title = SITE.title, description = SITE.description } = Astro.props
 
 const structuredData = {
   '@context': 'https://schema.org',
-  '@type': 'SportsClub',
-  name: SITE.name,
-  description: SITE.description,
-  sport: 'Running',
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: CLUB.city,
-    addressCountry: 'ES'
-  },
-  sameAs: [LINKS.instagram, LINKS.strava, LINKS.whatsapp]
+  '@graph': [
+    {
+      '@type': 'SportsClub',
+      name: SITE.name,
+      description: SITE.description,
+      sport: 'Running',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: CLUB.street,
+        postalCode: CLUB.postalCode,
+        addressLocality: CLUB.city,
+        addressCountry: 'ES'
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: CLUB.coords.lat,
+        longitude: CLUB.coords.lng
+      },
+      // Los sábados a las 8:00, todas las semanas
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'https://schema.org/Saturday',
+        opens: CLUB.time
+      },
+      sameAs: [LINKS.instagram, LINKS.strava, LINKS.whatsapp]
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: FAQ.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer }
+      }))
+    }
+  ]
 }
 ---
 

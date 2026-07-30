@@ -24,7 +24,7 @@ export const CLUB = {
   day: 'Sábados',
   time: '8:00',
   meetingPoint: 'Le Tigré Cakes',
-  street: 'Passatge del Rector Martí i Piñol, 3',
+  street: 'Passatge Fermí Marimon, 3',
   postalCode: '08820',
   city: 'El Prat de Llobregat',
   pace: '5:30 - 5:45',
@@ -155,6 +155,119 @@ export const RACES: Race[] = [
     place: 'Barcelona',
     blurb:
       'La San Silvestre de Barcelona: 10K el 31 de diciembre para despedir el año corriendo antes de la cena.'
+  }
+]
+
+export interface FaqItem {
+  question: string
+  answer: string
+}
+
+export const FAQ: FaqItem[] = [
+  {
+    question: '¿Hace falta apuntarse antes?',
+    answer:
+      'No. Puedes aparecer el sábado sin avisar. Si es tu primera vez, conviene decirlo en el grupo de WhatsApp para que alguien vaya contigo.'
+  },
+  {
+    question: '¿Hay cuota o hay que ser socio?',
+    answer:
+      'No. Sin cuotas, sin fichas y sin dorsales. Solo hay que aparecer.'
+  },
+  {
+    question: '¿A qué hora hay que llegar?',
+    answer:
+      'La salida es a las 8:00. Conviene llegar un poco antes para el café, presentarte y dejar la ropa si la traes.'
+  },
+  {
+    question: '¿Qué llevo?',
+    answer:
+      'Zapatillas de running, ropa cómoda y, si quieres, un bidón. El café de antes y los croissants de después corren de la casa.'
+  },
+  {
+    question: '¿Solo corréis los sábados?',
+    answer:
+      'La salida fija es el sábado. Todos los domingos un grupo sale para hacer la tirada larga y siempre lo comentan en el grupo de WhatsApp, además de otras salidas especiales (montaña, bici, viajes a carreras…).'
+  },
+  {
+    question: '¿Cuántos kilómetros se hacen?',
+    answer:
+      'Alrededor de 10 km, dependiendo de la ruta. Como máximo se hacen 12 km y como mínimo 9.'
+  },
+  {
+    question: '¿Qué rutas se hacen?',
+    answer:
+      'Tenemos varias rutas que vamos tomando según el día: hacia la playa del Prat, el Delta del Llobregat y los campos cerca del río hacia Cornellà.'
+  },
+  {
+    question: '¿Hacéis montaña?',
+    answer:
+      'De vez en cuando hay salidas especiales para hacer montaña, pero las salidas semanales son en plano.'
+  },
+  {
+    question: '¿Se corre en serie o se puede ir charlando?',
+    answer:
+      'El ritmo (5:30–5:45 min/km) está pensado para ir hablando. No es un entreno de series: es una salida social.'
+  },
+  {
+    question: '¿Y si voy más lento?',
+    answer:
+      '¡No pasa nada! Siempre intentamos adaptarnos a todos los ritmos. Alguien te acompañará o te esperaremos en los puntos acordados.'
+  },
+  {
+    question: '¿Hay grupos por nivel?',
+    answer:
+      'No solemos partir en packs rígidos. Intentamos que nadie se quede solo y nos reagrupamos en los puntos de espera.'
+  },
+  {
+    question: '¿Sirve si empiezo ahora o vuelvo de lesión?',
+    answer:
+      'Sí, siempre que puedas mantener un trote suave alrededor de 10 km. Si dudas, avisa en el grupo y te orientamos.'
+  },
+  {
+    question: '¿Se para para beber?',
+    answer:
+      'Siempre, como mínimo, hacemos una parada y en algunas ocasiones dos y hasta tres. Siempre hay una parada en una fuente aproximadamente a mitad del recorrido, para que puedas hidratarte.'
+  },
+  {
+    question: '¿Se puede dejar la ropa o algo?',
+    answer:
+      'Sí, totalmente gratis puedes dejar al llegar tus cosas en Le Tigré Cakes y recogerlas cuando volvamos (máximo una prenda o mochila). Ten en cuenta que no nos podemos responsabilizar si traes objetos de valor.'
+  },
+  {
+    question: '¿Hay baño antes o después?',
+    answer:
+      'Sí, en la cafetería: es el punto de encuentro y también donde volvemos al terminar.'
+  },
+  {
+    question: '¿Los croissants y el café son siempre gratis?',
+    answer:
+      'Sí. Si vienes a la salida del club, el café de especialidad de antes y los croissants de la vuelta son cortesía de la casa.'
+  },
+  {
+    question: '¿Se cancela si llueve?',
+    answer:
+      'Nunca hemos cancelado por lluvia. Si algún día pasara, avisaremos por el grupo de WhatsApp y por las stories de Instagram antes de la salida.'
+  },
+  {
+    question: '¿Dónde se aparca / cómo se llega?',
+    answer:
+      'Quedamos en Le Tigré Cakes (Passatge Fermí Marimon, 3, El Prat de Llobregat). En la web tienes el enlace a Google Maps con la ruta paso a paso.'
+  },
+  {
+    question: '¿Hay que estar en el grupo de WhatsApp o de Strava?',
+    answer:
+      'No es obligatorio para venir a correr, pero el WhatsApp es donde se avisan cambios, tiradas del domingo y se organizan las carreras. Strava es opcional.'
+  },
+  {
+    question: '¿Puedo venir solo o sola la primera vez?',
+    answer:
+      'Sí, y es lo habitual. Si avisas en el grupo, alguien te echa un cable para que no te sientas perdido.'
+  },
+  {
+    question: '¿Hacéis carreras o solo salidas de sábado?',
+    answer:
+      'Las dos cosas: la salida semanal del sábado y un calendario de carreras en grupo (medias, 10K, clásicas…). Si te animas a alguna, lo dices en el WhatsApp y nos organizamos.'
   }
 ]
 

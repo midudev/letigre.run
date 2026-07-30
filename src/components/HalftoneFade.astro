@@ -1,0 +1,73 @@
+---
+import { COLORS } from '../consts'
+
+interface Props {
+  /** Lado de la celda de la rejilla en píxeles */
+  pitch?: number
+  /** Lado del píxel dentro de la celda */
+  dot?: number
+  class?: string
+}
+
+const { pitch = 4, dot = 2, class: className = '' } = Astro.props
+
+/**
+ * Rejilla densa de píxeles diminutos, del mismo tamaño de arriba abajo: lo que
+ * cambia es su OPACIDAD, controlada por el canal alfa de la máscara.
+ *
+ * Son dos rejillas idénticas desfasadas media celda. La primera se ve tenue
+ * desde el principio y va ganando opacidad; la segunda entra a media altura y
+ * rellena los huecos de la primera, duplicando la densidad sin engordar el
+ * píxel. `mask` es la curva de opacidad de cada una.
+ */
+const LAYERS = [
+  {
+    offset: '0 0',
+    // Arranca en transparente: si empezara con opacidad ya puesta, el borde
+    // superior del bloque se vería como un corte recto
+    mask: 'transparent 0%, rgb(0 0 0 / 0.06) 8%, rgb(0 0 0 / 0.2) 20%, rgb(0 0 0 / 0.5) 38%, rgb(0 0 0 / 0.82) 52%, rgb(0 0 0) 66%'
+  },
+  {
+    offset: `${pitch / 2}px ${pitch / 2}px`,
+    mask: 'transparent 12%, rgb(0 0 0 / 0.12) 26%, rgb(0 0 0 / 0.42) 42%, rgb(0 0 0 / 0.78) 58%, rgb(0 0 0) 76%'
+  }
+]
+
+// Un <rect> en un SVG del tamaño de la celda da un cuadrado nítido de verdad;
+// con radial-gradient los píxeles saldrían redondos y difuminados.
+const offsetInCell = (pitch - dot) / 2
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${pitch}" height="${pitch}" shape-rendering="crispEdges"><rect x="${offsetInCell}" y="${offsetInCell}" width="${dot}" height="${dot}" fill="${COLORS.ink}"/></svg>`
+const pixelTile = `url("data:image/svg+xml,${svg
+  .replace(/#/g, '%23')
+  .replace(/"/g, "'")
+  .replace(/</g, '%3C')
+  .replace(/>/g, '%3E')}")`
+---
+
+<div
+  aria-hidden="true"
+  class:list={['pointer-events-none absolute inset-x-0 bottom-0', className]}
+>
+  {
+    LAYERS.map(({ offset, mask }) => (
+      <div
+        class="absolute inset-0"
+        style={`
+          background-image: ${pixelTile};
+          background-size: ${pitch}px ${pitch}px;
+          background-position: ${offset};
+          image-rendering: pixelated;
+          -webkit-mask-image: linear-gradient(to bottom, ${mask});
+          mask-image: linear-gradient(to bottom, ${mask});
+        `}
+      />
+    ))
+  }
+
+  <!-- Los píxeles cubren la mitad de la superficie: este degradado cierra el
+       último tramo y enlaza con el negro de la sección siguiente -->
+  <div
+    class="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-b from-transparent via-ink-950/60 to-ink-950"
+  >
+  </div>
+</div>

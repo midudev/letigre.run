@@ -1,5 +1,6 @@
 ---
 import { CLUB } from '../consts'
+import HalftoneFade from './HalftoneFade.astro'
 import Logo from './Logo.astro'
 import SocialLinks from './SocialLinks.astro'
 ---
@@ -7,7 +8,7 @@ import SocialLinks from './SocialLinks.astro'
 <header class="relative isolate min-h-[100svh] overflow-hidden pb-10">
   <!-- Fondo: la salida del sábado -->
   <video
-    class="absolute inset-0 -z-20 size-full object-cover opacity-45"
+    class="absolute inset-0 -z-20 size-full object-cover"
     src="/videos/web/letigre-running.mp4"
     poster="/videos/web/letigre-running.jpg"
     autoplay
@@ -17,11 +18,20 @@ import SocialLinks from './SocialLinks.astro'
     preload="metadata"
     aria-hidden="true"></video>
 
+  <!-- Velo suave: sólo el necesario para que el texto se lea sobre el vídeo -->
   <div
     aria-hidden="true"
-    class="absolute inset-0 -z-10 bg-gradient-to-b from-ink-950/85 via-ink-950/70 to-ink-950"
+    class="absolute inset-0 -z-10 bg-gradient-to-b from-ink-950/75 via-ink-950/35 to-transparent"
   >
   </div>
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-gradient-to-r from-ink-950/80 via-ink-950/25 to-transparent"
+  >
+  </div>
+
+  <!-- El vídeo se disuelve en un tramado de puntos que crecen hasta el negro -->
+  <HalftoneFade class="-z-10 h-[80%]" />
 
   <!-- Tigre gigante de fondo -->
   <Logo
