@@ -1,0 +1,60 @@
+---
+/**
+ * Imagen estática multi-formato. Las variantes viven en `public/images`
+ * (generadas con `pnpm images`): AVIF → WebP → JPG.
+ */
+interface Props {
+  /**
+   * Ruta base sin ancho ni extensión.
+   * Ej. `/images/avion/avion` → `/images/avion/avion-720.avif`
+   */
+  src: string
+  /** Anchos generados por el script de optimización */
+  widths: number[]
+  sizes: string
+  alt: string
+  /** Dimensiones intrínsecas del maestro (CLS / aspect-ratio) */
+  width: number
+  height: number
+  class?: string
+  loading?: 'lazy' | 'eager'
+  decoding?: 'async' | 'auto' | 'sync'
+  fetchpriority?: 'high' | 'low' | 'auto'
+}
+
+const {
+  src,
+  widths,
+  sizes,
+  alt,
+  width,
+  height,
+  class: className,
+  loading = 'lazy',
+  decoding = 'async',
+  fetchpriority
+} = Astro.props
+
+const sorted = [...new Set(widths)].sort((a, b) => a - b)
+const fallbackWidth = sorted.at(-1) ?? width
+
+const srcset = (ext: string) =>
+  sorted.map((w) => `${src}-${w}.${ext} ${w}w`).join(', ')
+---
+
+<picture>
+  <source type="image/avif" srcset={srcset('avif')} sizes={sizes} />
+  <source type="image/webp" srcset={srcset('webp')} sizes={sizes} />
+  <img
+    src={`${src}-${fallbackWidth}.jpg`}
+    srcset={srcset('jpg')}
+    sizes={sizes}
+    alt={alt}
+    width={width}
+    height={height}
+    class:list={[className]}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+  />
+</picture>
