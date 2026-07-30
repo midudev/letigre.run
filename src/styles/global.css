@@ -181,25 +181,33 @@
 @utility reveal {
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
+      /* `both` deja el from hasta que arranca el rango y el to al salir */
       animation: reveal-in linear both;
       animation-timeline: view();
-      /* Empieza cuando el elemento asoma un 10% y acaba antes de llegar al
-         centro. `--reveal-shift` escalona los elementos de una misma lista:
-         al retrasar el rango, cada uno entra un poco después que el anterior. */
-      animation-range: entry calc(0% + var(--reveal-shift, 0%)) entry
-        calc(85% + var(--reveal-shift, 0%));
+      /* Rango largo a propósito: sólo con `entry` la animación dura un par de
+         píxeles de scroll en bloques bajos y casi no se ve. Seguimos un rato
+         en `cover` para que el gesto de bajar “conduzca” la entrada.
+         `--reveal-shift` escalona listas (galería, FAQ, carreras…). */
+      animation-range: entry calc(0% + var(--reveal-shift, 0%)) cover
+        calc(28% + var(--reveal-shift, 0%));
     }
   }
 }
 
 @keyframes reveal-in {
-  from {
+  /* Arranque marcado: sube desde más abajo y un pelín más pequeño, con un
+     tramo inicial casi quieto para que el “pop” se lea al seguir scrolleando */
+  0% {
     opacity: 0;
-    transform: translateY(28px);
+    transform: translate3d(0, 4.5rem, 0) scale(0.92);
   }
-  to {
+  40% {
+    opacity: 0.35;
+    transform: translate3d(0, 2rem, 0) scale(0.97);
+  }
+  100% {
     opacity: 1;
-    transform: none;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 

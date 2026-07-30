@@ -12,9 +12,9 @@ interface Props {
 
 const { order = 0, as: Tag = 'div', class: className = '' } = Astro.props
 
-// Tope de 15% para que el rango no se salga y el último elemento no se quede
-// esperando media pantalla
-const shift = Math.min(order * 3, 15)
+// Escalón más generoso (5% por ítem) para que el cascade se lea al bajar.
+// Tope del 20%: más allá el último de una lista larga entraría demasiado tarde.
+const shift = Math.min(order * 5, 20)
 ---
 
 <Tag
