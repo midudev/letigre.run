@@ -1,8 +1,9 @@
 ---
-import { CLUB } from '../consts'
-import HalftoneFade from './HalftoneFade.astro'
-import Logo from './Logo.astro'
-import SocialLinks from './SocialLinks.astro'
+import { CLUB } from '@/consts'
+import HalftoneFade from '@/components/HalftoneFade.astro'
+import Logo from '@/components/Logo.astro'
+import NextRun from '@/components/NextRun.astro'
+import SocialLinks from '@/components/SocialLinks.astro'
 ---
 
 <header class="relative isolate min-h-[100svh] overflow-hidden pb-10">
@@ -47,34 +48,25 @@ import SocialLinks from './SocialLinks.astro'
     />
 
     <div class="flex flex-1 flex-col justify-center py-10">
-      <p
-        class="flex items-center gap-2 font-display text-sm tracking-[0.2em] text-brand uppercase"
-      >
-        <span class="relative flex size-2.5">
-          <span
-            class="animate-pulse-ring absolute inline-flex size-full rounded-full bg-brand"
-          ></span>
-          <span class="relative inline-flex size-2.5 rounded-full bg-brand"
-          ></span>
-        </span>
-        {CLUB.city}
-      </p>
-
-      <h1 class="mt-4 text-[15vw] leading-[0.85] sm:text-7xl lg:text-8xl">
+      <h1 class="text-[15vw] leading-[0.85] sm:text-7xl lg:text-8xl">
         Corre,<br />
         <span class="text-brand">desayuna</span><br />
         y repite
       </h1>
 
-      <p class="mt-6 max-w-md text-lg/relaxed text-white/75">
-        Somos el club de running de <strong class="font-semibold text-white"
-          >{CLUB.meetingPoint}</strong
-        >. Salimos <strong class="font-semibold text-white"
-          >{CLUB.day.toLowerCase()} a las {CLUB.time}</strong
-        >, sin fichas ni cuotas. Sólo hay que aparecer.
+      <p class="mt-6 max-w-lg text-lg/relaxed text-white/75">
+        Club de running del <strong class="font-semibold text-white"
+          >{CLUB.cityShort}</strong
+        >. Nosotros ponemos el café y los croissants, y tú pones el running.
       </p>
 
-      <SocialLinks class="mt-8" />
+      <!-- Redes a la izquierda, próxima salida al otro extremo de la misma línea -->
+      <div
+        class="mt-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10"
+      >
+        <SocialLinks />
+        <NextRun alignEnd />
+      </div>
 
       <!-- Datos clave de la salida -->
       <dl class="mt-10 grid grid-cols-3 gap-3 border-t-2 border-brand/25 pt-5">

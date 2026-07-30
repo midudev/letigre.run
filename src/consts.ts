@@ -27,6 +27,8 @@ export const CLUB = {
   street: 'Passatge Fermí Marimon, 3',
   postalCode: '08820',
   city: 'El Prat de Llobregat',
+  /** Sin artículo, para frases del tipo «del Prat de Llobregat» */
+  cityShort: 'Prat de Llobregat',
   pace: '5:30 - 5:45',
   paceUnit: 'min/km',
   /** Coordenadas de la cafetería, punto de salida */
@@ -43,6 +45,27 @@ export const LINKS = {
   directions:
     'https://www.google.com/maps/dir/?api=1&destination=41.3290122,2.0939926&destination_place_id=ChIJw0kJ8MSepBIR6qSOKT__c4I'
 } as const
+
+export interface SpecialRun {
+  /** `YYYY-MM-DD` */
+  date: string
+  /** `HH:MM`. Si se omite se usa la hora habitual del club */
+  time?: string
+  title: string
+  /** Aviso que se muestra bajo el título */
+  note?: string
+  /** Punto de encuentro distinto al habitual */
+  place?: string
+}
+
+/**
+ * Salidas que se salen de lo normal (otra hora, otro sitio, ruta especial).
+ * Tienen prioridad sobre el sábado de siempre si caen antes.
+ */
+export const SPECIAL_RUNS: SpecialRun[] = []
+
+/** Sábados en los que NO hay salida (puentes, vacaciones, carrera del grupo) */
+export const SKIPPED_RUNS: { date: string; reason?: string }[] = []
 
 export interface Race {
   /** Fecha de la carrera en formato ISO (YYYY-MM-DD) */

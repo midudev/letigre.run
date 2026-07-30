@@ -1,0 +1,118 @@
+---
+interface Props {
+  /** Alinea el bloque a la derecha a partir de `lg` */
+  alignEnd?: boolean
+  class?: string
+}
+
+const { alignEnd = false, class: className = '' } = Astro.props
+
+/**
+ * Se calcula entero en el navegador, no en el build: el sitio es estático y si
+ * la fecha se generase al compilar haría falta un deploy cada semana. Aparece
+ * con un fade-in sobre un esqueleto que ya ocupa su sitio exacto, así que no
+ * mueve el layout (cero CLS).
+ */
+---
+
+<div
+  class:list={['next-run', alignEnd && 'lg:text-right', className]}
+  data-next-run
+  data-state="loading"
+  aria-live="polite"
+>
+  <p
+    class:list={[
+      'flex items-center gap-2 font-display text-xs tracking-[0.2em] text-brand uppercase sm:text-sm',
+      alignEnd && 'lg:justify-end'
+    ]}
+  >
+    <span class="relative flex size-2">
+      <span
+        class="animate-pulse-ring absolute inline-flex size-full rounded-full bg-brand"
+      ></span>
+      <span class="relative inline-flex size-2 rounded-full bg-brand"></span>
+    </span>
+    Próxima salida
+  </p>
+
+  <p class="mt-1.5 font-display text-2xl leading-none uppercase sm:text-3xl">
+    <span class="next-run__slot">
+      <span class="next-run__skeleton w-[13ch]"></span>
+      <span class="next-run__value" data-next-run-date></span>
+    </span>
+  </p>
+</div>
+
+<style>
+  /* Esqueleto y valor comparten la misma celda del grid: ocupan el mismo hueco,
+     así que pasar de uno a otro no desplaza nada */
+  .next-run__slot {
+    display: inline-grid;
+    vertical-align: bottom;
+  }
+
+  .next-run__skeleton,
+  .next-run__value {
+    grid-area: 1 / 1;
+    transition: opacity 0.5s ease;
+  }
+
+  .next-run__skeleton {
+    height: 0.8em;
+    align-self: center;
+    border-radius: 9999px;
+    background: color-mix(in oklab, var(--color-brand) 20%, transparent);
+    animation: next-run-pulse 1.4s ease-in-out infinite;
+  }
+
+  .next-run__value {
+    opacity: 0;
+  }
+
+  [data-state='ready'] .next-run__skeleton {
+    opacity: 0;
+    animation: none;
+  }
+
+  [data-state='ready'] .next-run__value {
+    opacity: 1;
+  }
+
+  @keyframes next-run-pulse {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .next-run__skeleton {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import { formatRunDate, getNextRun } from '@/lib/next-run'
+
+  const section = document.querySelector<HTMLElement>('[data-next-run]')
+  const dateEl = section?.querySelector<HTMLElement>('[data-next-run-date]')
+
+  if (section && dateEl) {
+    const render = () => {
+      const run = getNextRun()
+      const date = formatRunDate(run.startsAt)
+
+      dateEl.textContent = run.isToday ? `Hoy, ${date.split(', ')[1]}` : date
+      section.dataset.state = 'ready'
+    }
+
+    render()
+    // Por si alguien deja la pestaña abierta y cruza la hora de salida
+    setInterval(render, 60_000)
+  }
+</script>
