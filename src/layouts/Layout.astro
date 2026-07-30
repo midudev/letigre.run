@@ -100,9 +100,9 @@ const structuredData = {
       fetchpriority="high"
     />
 
-    <!-- Las teselas del mapa se piden al hacer scroll: adelantar el handshake
-         ahorra el DNS y el TLS cuando llega el momento -->
-    <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin />
+    <!-- Sólo la resolución DNS: las teselas del mapa se piden mucho después de
+         la carga, así que un `preconnect` mantendría una conexión sin usar -->
+    <link rel="dns-prefetch" href="https://basemaps.cartocdn.com" />
 
     <Font cssVariable="--font-anton" preload />
     <Font cssVariable="--font-inter" preload />
