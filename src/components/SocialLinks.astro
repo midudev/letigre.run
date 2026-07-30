@@ -10,10 +10,14 @@ interface Props {
 const { variant = 'hero', class: className = '' } = Astro.props
 
 const base =
-  'group inline-flex items-center justify-center gap-2 rounded-full font-display uppercase transition active:scale-95'
+  'group inline-flex min-w-0 items-center justify-center gap-2 rounded-full font-display uppercase transition active:scale-95'
 
+// El relleno y el cuerpo suben a partir de `sm`: con «Instagram» y su icono, un
+// `px-7 text-lg` no cabe en dos columnas en pantallas de 320 px
 const sizes =
-  variant === 'hero' ? 'px-7 py-4 text-lg' : 'px-5 py-3 text-base'
+  variant === 'hero'
+    ? 'px-5 py-3.5 text-base sm:px-7 sm:py-4 sm:text-lg'
+    : 'px-5 py-3 text-base'
 
 // Strava e Instagram comparten la línea en móvil, de ahí el `flex-1`
 const secondary =
