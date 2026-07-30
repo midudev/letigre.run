@@ -1,8 +1,8 @@
 ---
 import { Image } from 'astro:assets'
-import { CLUB, LINKS } from '../consts'
-import Reveal from './Reveal.astro'
-import tienda from '../assets/letigre-tienda.png'
+import { CLUB, LINKS } from '@/consts'
+import Reveal from '@/components/Reveal.astro'
+import tienda from '@/assets/letigre-tienda.png'
 ---
 
 <section id="donde" class="mx-auto max-w-6xl px-5 py-20 sm:py-28">
@@ -139,7 +139,7 @@ import tienda from '../assets/letigre-tienda.png'
 </section>
 
 <script>
-  import { COLORS } from '../consts'
+  import { COLORS } from '@/consts'
 
   const container = document.querySelector<HTMLElement>('[data-map]')
   const popupTemplate =
