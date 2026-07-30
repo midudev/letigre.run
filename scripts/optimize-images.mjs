@@ -8,7 +8,7 @@
 //
 // Uso: pnpm images
 import { execFileSync } from 'node:child_process'
-import { mkdir, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 
 /** @typedef {{ id: string, input: string, widths: number[] }} ImageJob */
@@ -161,26 +161,8 @@ for (const job of IMAGES) {
   results.push(await optimize(job))
 }
 
-// og.jpg: crawlers sociales no usan <picture>; se reencodea in-place
-const ogIn = 'public/og.jpg'
-const ogTmp = 'public/og.jpg.tmp'
-magick([
-  ogIn,
-  '-auto-orient',
-  '-resize',
-  '1200x630^',
-  '-gravity',
-  'center',
-  '-extent',
-  '1200x630',
-  '-quality',
-  '82',
-  ogTmp
-])
-const { rename } = await import('node:fs/promises')
-await rename(ogTmp, ogIn)
-const ogSize = Math.round((await stat(ogIn)).size / 1024)
-console.log(`[images] og.jpg · ${ogSize} KB`)
+// public/og.jpg es la tarjeta social (1200×630): se gestiona a mano y no se
+// reencodea aquí para no pisar el diseño de previews de WhatsApp/X/LinkedIn.
 
 const manifest = Object.fromEntries(
   results.map((r) => [
