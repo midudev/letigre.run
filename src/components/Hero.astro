@@ -7,17 +7,22 @@ import SocialLinks from '@/components/SocialLinks.astro'
 ---
 
 <header class="relative isolate min-h-[100svh] overflow-hidden pb-10">
-  <!-- Fondo: la salida del sábado -->
+  <!-- Fondo: la salida del sábado. El poster es el LCP, así que se pinta ya y
+       el vídeo se descarga después sin competir con él. En móvil se sirve un
+       archivo de menos de un mega. -->
   <video
     class="absolute inset-0 -z-20 size-full object-cover"
-    src="/videos/web/letigre-running.mp4"
-    poster="/videos/web/letigre-running.jpg"
-    autoplay
+    poster="/videos/web/hero.webp"
     muted
     loop
     playsinline
-    preload="metadata"
-    aria-hidden="true"></video>
+    preload="none"
+    aria-hidden="true"
+    data-hero-video
+  >
+    <source src="/videos/web/hero-sm.mp4" type="video/mp4" media="(max-width: 640px)" />
+    <source src="/videos/web/hero.mp4" type="video/mp4" />
+  </video>
 
   <!-- Velo suave: sólo el necesario para que el texto se lea sobre el vídeo -->
   <div
@@ -92,3 +97,38 @@ import SocialLinks from '@/components/SocialLinks.astro'
     </div>
   </div>
 </header>
+
+<script>
+  const video = document.querySelector<HTMLVideoElement>('[data-hero-video]')
+
+  if (video) {
+    const connection = (navigator as any).connection
+    const savesData = connection?.saveData === true
+    const slowNetwork = /^(slow-)?2g$/.test(connection?.effectiveType ?? '')
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    // Con ahorro de datos, red lenta o animaciones reducidas se queda el poster:
+    // el hero se ve igual de bien y no se gastan megas a lo tonto
+    if (!savesData && !slowNetwork && !reducedMotion) {
+      // Se arranca tras el primer pintado para no competir con el LCP
+      const start = () => {
+        video.preload = 'auto'
+        video.play().catch(() => {
+          // Autoplay bloqueado: se queda el poster
+        })
+      }
+
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(start, { timeout: 2000 })
+      } else {
+        addEventListener('load', start, { once: true })
+      }
+    }
+
+    // Un vídeo de fondo que sigue corriendo en una pestaña oculta sólo gasta batería
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) video.pause()
+      else if (video.preload === 'auto') video.play().catch(() => {})
+    })
+  }
+</script>
