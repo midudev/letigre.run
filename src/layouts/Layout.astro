@@ -90,6 +90,16 @@ const structuredData = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
+    <!-- El póster del vídeo del hero es el elemento más grande de la primera
+         pantalla (el LCP): pedirlo cuanto antes adelanta el pintado -->
+    <link
+      rel="preload"
+      as="image"
+      href="/videos/web/hero.webp"
+      type="image/webp"
+      fetchpriority="high"
+    />
+
     <!-- Las teselas del mapa se piden al hacer scroll: adelantar el handshake
          ahorra el DNS y el TLS cuando llega el momento -->
     <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin />
