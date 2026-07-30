@@ -1,12 +1,52 @@
 @import "tailwindcss";
 
 /*
+ * Fallback metric-matched de Anton (Capsize / Chrome font-fallbacks).
+ * Medido sobre el woff2 latin de Anton frente a Impact y Arial del sistema.
+ *
+ * Impact es condensada y casi del mismo ancho medio (size-adjust ≈ 99 %):
+ * al hacer font-display: swap el H1 casi no salta. Arial va detrás por si
+ * el SO no trae Impact (Linux, algunos Android).
+ *
+ * Fórmula: size-adjust = (anton.xWidthAvg / anton.upm) / (fb.xWidthAvg / fb.upm)
+ *           ascent/descent/line-gap-override = métricaAnton / (upm · size-adjust)
+ */
+@font-face {
+  font-family: 'Anton Fallback';
+  src: local('Impact'), local('Haettenschweiler');
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+  size-adjust: 99.1617%;
+  ascent-override: 118.6214%;
+  descent-override: 33.1884%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Anton Fallback Safe';
+  src:
+    local('Arial'),
+    local('Helvetica Neue'),
+    local('Helvetica');
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+  size-adjust: 90.69%;
+  ascent-override: 129.7022%;
+  descent-override: 36.2886%;
+  line-gap-override: 0%;
+}
+
+/*
  * Le Tigre Running Community — colores oficiales
  * Extraídos del logo de la camiseta: lima/volt (hue 79°) sobre negro.
  */
 @theme {
-  /* Tipografías. Las `--font-anton` / `--font-inter` las inyecta la Fonts API de Astro */
-  --font-display: var(--font-anton);
+  /* Anton + fallbacks con métricas alineadas. `--font-anton` lo inyecta
+     la Fonts API (sólo la cara web); el resto del stack es nuestro. */
+  --font-display:
+    var(--font-anton), 'Anton Fallback', 'Anton Fallback Safe', sans-serif;
   --font-sans: var(--font-inter);
 
   /* Lima — color de marca. Escala 50..950 */
@@ -136,6 +176,15 @@
     font-kerning: normal;
     /* Reparte los titulares en líneas de longitud parecida */
     text-wrap: balance;
+    /* Sin negrita/cursiva sintéticas: el fallback no se “engorda” y descuadra
+       el size-adjust al hacer swap */
+    font-synthesis: none;
+  }
+
+  /* font-display (botones, marquee, eyebrows…) hereda el mismo stack y
+     tampoco debe sintetizar pesos raros sobre Impact/Arial */
+  .font-display {
+    font-synthesis: none;
   }
 
   /* Evita palabras huérfanas al final de los párrafos */
