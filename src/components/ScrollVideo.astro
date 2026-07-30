@@ -43,7 +43,7 @@ const objectPos =
         Poster en capa propia (no el attr `poster` del <video>).
         En Mobile Safari, al llamar play() el poster nativo se quita ANTES de
         pintar el primer frame → flash negro. El <img> se queda encima hasta
-        que hay frame real y entonces se funde.
+        que hay frame real y entonces se quita al instante (sin fade).
       */}
       <img
         src={`${base}.webp`}
@@ -52,7 +52,7 @@ const objectPos =
         decoding="async"
         draggable="false"
         class:list={[
-          'pointer-events-none absolute inset-0 z-10 size-full object-cover transition-opacity duration-300 ease-out',
+          'pointer-events-none absolute inset-0 z-10 size-full object-cover',
           objectPos
         ]}
         data-video-poster
@@ -125,16 +125,9 @@ const objectPos =
     const handoff = () => {
       if (poster.dataset.handedOff === '1') return
       poster.dataset.handedOff = '1'
-      poster.classList.add('opacity-0')
-      // Tras el fade el <img> ya no aporta nada; lo sacamos del árbol de capas
-      // para que no compita con el vídeo en el compositor de Safari.
-      poster.addEventListener(
-        'transitionend',
-        () => {
-          poster.hidden = true
-        },
-        { once: true }
-      )
+      // Sin fade: el frame del vídeo ya está en pantalla; quitar el poster
+      // al instante evita un crossfade que se nota como lag.
+      poster.hidden = true
     }
 
     // requestVideoFrameCallback = “hay píxeles del vídeo en pantalla”.

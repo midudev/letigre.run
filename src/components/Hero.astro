@@ -10,8 +10,8 @@ import SocialLinks from '@/components/SocialLinks.astro'
   {/* Fondo: la salida del sábado. El poster es el LCP (img propia, no el
        attr `poster` del <video>): en Mobile Safari ese attr se quita al
        play() antes del primer frame → flash negro. El <img> va ENCIMA del
-       vídeo y se funde solo cuando hay frame real. El MP4 se descarga
-       después sin competir con el LCP; en móvil es <1 MB. */}
+       vídeo y se quita al instante cuando hay frame real (sin fade). El MP4
+       se descarga después sin competir con el LCP; en móvil es <1 MB. */}
   <div class="absolute inset-0 -z-20" aria-hidden="true">
     <video
       class="absolute inset-0 size-full bg-transparent object-cover"
@@ -34,7 +34,7 @@ import SocialLinks from '@/components/SocialLinks.astro'
       fetchpriority="high"
       decoding="sync"
       draggable="false"
-      class="pointer-events-none absolute inset-0 size-full object-cover transition-opacity duration-500 ease-out"
+      class="pointer-events-none absolute inset-0 size-full object-cover"
       data-hero-poster
     />
   </div>
@@ -130,14 +130,8 @@ import SocialLinks from '@/components/SocialLinks.astro'
     const handoffPoster = () => {
       if (!poster || poster.dataset.handedOff === '1') return
       poster.dataset.handedOff = '1'
-      poster.classList.add('opacity-0')
-      poster.addEventListener(
-        'transitionend',
-        () => {
-          poster.hidden = true
-        },
-        { once: true }
-      )
+      // Sin fade: el frame del vídeo ya está; swap instantáneo.
+      poster.hidden = true
     }
 
     const armPosterHandoff = () => {
