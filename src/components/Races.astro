@@ -31,7 +31,7 @@ const races = upcomingRaces()
         const isFull = race.status === 'full'
 
         return (
-          <Reveal as="li" delay={index * 50}>
+          <Reveal as="li" order={index}>
             <a
               href={LINKS.whatsapp}
               target="_blank"

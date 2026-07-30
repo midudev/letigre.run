@@ -40,7 +40,7 @@ const photos = [
   <div class="mt-8 grid gap-4 sm:grid-cols-2">
     {
       photos.map((photo, index) => (
-        <Reveal delay={index * 100} class={photo.featured ? 'sm:col-span-2' : ''}>
+        <Reveal order={index} class={photo.featured ? 'sm:col-span-2' : ''}>
           <figure class="group relative overflow-hidden rounded-3xl border-2 border-brand/25">
             <Image
               src={photo.src}

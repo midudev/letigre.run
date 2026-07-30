@@ -25,7 +25,7 @@ import Reveal from '@/components/Reveal.astro'
   <div class="mt-10 divide-y divide-brand/15 border-y border-brand/15">
     {
       FAQ.map((item, index) => (
-        <Reveal delay={index * 40}>
+        <Reveal order={index}>
           <details class="group faq-item">
             <summary
               class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left outline-none transition-colors select-none hover:text-brand focus-visible:text-brand sm:py-6 [&::-webkit-details-marker]:hidden"
