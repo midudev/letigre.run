@@ -304,37 +304,64 @@
   .marquee--ghost .marquee__dot {
     @apply bg-brand/40;
   }
+
+  /* —— FAQ: un <details> por pregunta, mismas clases en todas —— */
+  .faq-list {
+    @apply mt-10 divide-y divide-brand/15 border-y border-brand/15;
+  }
+
+  .faq-item__summary {
+    @apply flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left outline-none transition-colors select-none hover:text-brand focus-visible:text-brand sm:py-6 [&::-webkit-details-marker]:hidden;
+  }
+
+  .faq-item__question {
+    @apply font-display text-lg leading-tight uppercase sm:text-xl md:text-2xl;
+  }
+
+  .faq-item__icon {
+    @apply flex size-9 shrink-0 items-center justify-center rounded-full border border-brand/35 text-brand transition-transform duration-300 group-open:rotate-45 group-open:border-brand group-open:bg-brand group-open:text-ink-950;
+  }
+
+  .faq-item__answer {
+    @apply max-w-prose pb-5 text-base/relaxed text-white/70 sm:pb-6 md:text-lg/relaxed;
+  }
 }
 
-/*
- * Reveal al entrar en viewport (IntersectionObserver → clase `.is-inview`).
- *
- * Por qué NO usamos `animation-timeline: view()`:
- * - En Safari (sobre todo iOS) el soporte es irregular o inexistente.
- * - En móvil el scroll es por inercia: el scrub se “come” la animación en un
- *   parpadeo y parece que no hay efecto. Una transición en el TIEMPO al
- *   cruzar el umbral se lee mucho mejor.
- *
- * Sin JS (o con `prefers-reduced-motion`) el contenido se ve normal.
- * Con JS, `html[data-reveal-ready]` oculta los que aún no han entrado.
- */
-.reveal {
-  /* El delay lo pone Reveal.astro vía --reveal-delay (stagger en listas) */
-  transition:
-    opacity 1s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
-    transform 1s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+/* Entrada de secciones al hacer scroll, con animaciones ligadas al scroll: sin
+   JavaScript, sin IntersectionObserver y animado por el compositor.
+   El estado por defecto es VISIBLE a propósito: si el navegador no soporta
+   `animation-timeline`, simplemente no hay animación y el contenido se ve. */
+@utility reveal {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* `both` deja el from hasta que arranca el rango y el to al salir */
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      /* Rango largo a propósito: sólo con `entry` la animación dura un par de
+         píxeles de scroll en bloques bajos y casi no se ve. Seguimos un rato
+         en `cover` para que el gesto de bajar “conduzca” la entrada.
+         `--reveal-shift` escalona listas (galería, FAQ, carreras…). */
+      animation-range: entry calc(0% + var(--reveal-shift, 0%)) cover
+        calc(28% + var(--reveal-shift, 0%));
+    }
+  }
 }
 
-html[data-reveal-ready] .reveal:not(.is-inview) {
-  opacity: 0;
-  /* Viaje generoso: en móvil un translate pequeño se come con el scroll y
-     parece que “no hay animación”. 4.5rem + scale se lee claro. */
-  transform: translate3d(0, 4.5rem, 0) scale(0.92);
-}
-
-.reveal.is-inview {
-  opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
+@keyframes reveal-in {
+  /* Arranque marcado: sube desde más abajo y un pelín más pequeño, con un
+     tramo inicial casi quieto para que el “pop” se lea al seguir scrolleando */
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 4.5rem, 0) scale(0.92);
+  }
+  40% {
+    opacity: 0.35;
+    transform: translate3d(0, 2rem, 0) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -350,8 +377,7 @@ html[data-reveal-ready] .reveal:not(.is-inview) {
     transition-duration: 0.01ms !important;
   }
 
-  .reveal,
-  html[data-reveal-ready] .reveal:not(.is-inview) {
+  .reveal {
     opacity: 1;
     transform: none;
   }

@@ -2,8 +2,8 @@
 interface Props {
   /**
    * Escalona la entrada dentro de una lista: `0` entra primero, `1` un poco
-   * después, etc. Se traduce a `transition-delay` (el stagger se lee al
-   * cruzar el umbral; no depende de `animation-timeline`).
+   * después, etc. Se traduce a un retraso del rango de scroll, porque
+   * `animation-delay` no tiene efecto en las animaciones ligadas al scroll.
    */
   order?: number
   as?: 'div' | 'li' | 'section' | 'article' | 'span'
@@ -12,65 +12,14 @@ interface Props {
 
 const { order = 0, as: Tag = 'div', class: className = '' } = Astro.props
 
-// 120 ms por ítem, tope 480 ms: cascade legible en galería/FAQ sin que el
-// último entre tan tarde que parezca un bug de carga.
-const delayMs = Math.min(order * 120, 480)
+// Escalón más generoso (5% por ítem) para que el cascade se lea al bajar.
+// Tope del 20%: más allá el último de una lista larga entraría demasiado tarde.
+const shift = Math.min(order * 5, 20)
 ---
 
 <Tag
   class:list={['reveal', className]}
-  style={delayMs ? `--reveal-delay: ${delayMs}ms;` : undefined}
-  data-reveal
+  style={shift ? `--reveal-shift: ${shift}%;` : undefined}
 >
   <slot />
 </Tag>
-
-<script>
-  const items = document.querySelectorAll<HTMLElement>('[data-reveal]')
-
-  if (items.length === 0) {
-    // nada que animar
-  } else if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // Accesibilidad: todo visible de golpe, sin viaje
-    for (const el of items) el.classList.add('is-inview')
-  } else {
-    const show = (el: Element) => {
-      el.classList.add('is-inview')
-    }
-
-    /** ¿Ya está lo bastante dentro del viewport? (misma lógica que el IO) */
-    const alreadyInView = (el: HTMLElement) => {
-      const rect = el.getBoundingClientRect()
-      const vh = window.innerHeight
-      // rootMargin inferior ~8%: la “línea de meta” no está al borde
-      const floor = vh * 0.92
-      const visible = Math.min(rect.bottom, floor) - Math.max(rect.top, 0)
-      if (visible <= 0) return false
-      // threshold 0.12, o presencia clara si el bloque es más alto que la pantalla
-      return visible >= Math.min(rect.height * 0.12, vh * 0.15)
-    }
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue
-          show(entry.target)
-          io.unobserve(entry.target)
-        }
-      },
-      {
-        threshold: 0.12,
-        rootMargin: '0px 0px -8% 0px'
-      }
-    )
-
-    // 1) Marca los que ya se ven (evita flash al activar el modo oculto)
-    // 2) Observa el resto
-    // 3) Activa `data-reveal-ready` → CSS oculta sólo los pendientes
-    for (const el of items) {
-      if (alreadyInView(el)) show(el)
-      else io.observe(el)
-    }
-    document.documentElement.dataset.revealReady = ''
-  }
-</script>
