@@ -1,0 +1,77 @@
+---
+import { formatRaceDate, upcomingRaces, LINKS } from '../consts'
+import Reveal from './Reveal.astro'
+
+const races = upcomingRaces()
+---
+
+<section id="carreras" class="mx-auto max-w-6xl px-5 py-20 sm:py-28">
+  <Reveal>
+    <p
+      class="font-display text-sm tracking-[0.25em] text-brand uppercase sm:text-base"
+    >
+      Calendario Social Run
+    </p>
+    <h2 class="mt-3 text-4xl text-balance sm:text-5xl lg:text-6xl">
+      Próximas carreras<br />
+      <span class="text-brand">con gente del club</span>
+    </h2>
+    <p
+      class="mt-5 max-w-prose text-base/relaxed text-white/70 md:text-lg/relaxed"
+    >
+      En todas estas ya hay alguien del Social Run apuntado. Si te animas a
+      alguna, dilo en el grupo y nos organizamos para ir juntos.
+    </p>
+  </Reveal>
+
+  <ul class="mt-10 grid gap-4 sm:grid-cols-2">
+    {
+      races.map((race, index) => {
+        const { day, month } = formatRaceDate(race.date)
+        const isFull = race.status === 'full'
+
+        return (
+          <Reveal as="li" delay={index * 50}>
+            <a
+              href={LINKS.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex h-full flex-col rounded-3xl border-2 border-brand/20 bg-ink-900/60 p-5 transition-colors hover:border-brand/60 hover:bg-brand/5"
+            >
+              <div class="flex items-start gap-4">
+                <span class="flex w-12 shrink-0 flex-col items-center leading-none">
+                  <span class="font-display text-3xl text-brand">{day}</span>
+                  <span class="mt-1 text-[0.65rem] tracking-widest text-white/50 uppercase">
+                    {month}
+                  </span>
+                </span>
+
+                <span class="min-w-0 flex-1">
+                  <span class="block font-display text-xl leading-tight uppercase">
+                    {race.name}
+                  </span>
+                  <span class="text-xs tracking-wider text-white/45 uppercase">
+                    {race.place}
+                  </span>
+                </span>
+
+                <span
+                  class:list={[
+                    'shrink-0 rounded-full border px-3 py-1 font-display text-sm transition-colors',
+                    isFull
+                      ? 'border-white/25 text-white/50'
+                      : 'border-brand/40 text-brand group-hover:bg-brand group-hover:text-ink-950'
+                  ]}
+                >
+                  {isFull ? 'Completo' : `${race.km} km`}
+                </span>
+              </div>
+
+              <p class="mt-4 text-sm/relaxed text-white/65">{race.blurb}</p>
+            </a>
+          </Reveal>
+        )
+      })
+    }
+  </ul>
+</section>

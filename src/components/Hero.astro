@@ -1,0 +1,92 @@
+---
+import { CLUB } from '../consts'
+import Logo from './Logo.astro'
+import SocialLinks from './SocialLinks.astro'
+---
+
+<header class="relative isolate min-h-[100svh] overflow-hidden pb-10">
+  <!-- Fondo: la salida del sábado -->
+  <video
+    class="absolute inset-0 -z-20 size-full object-cover opacity-45"
+    src="/videos/web/letigre-running.mp4"
+    poster="/videos/web/letigre-running.jpg"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    aria-hidden="true"></video>
+
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-gradient-to-b from-ink-950/85 via-ink-950/70 to-ink-950"
+  >
+  </div>
+
+  <!-- Tigre gigante de fondo -->
+  <Logo
+    variant="cat"
+    class="pointer-events-none absolute -top-10 -right-24 -z-10 w-[70vw] max-w-lg text-brand/10"
+  />
+
+  <div class="mx-auto flex min-h-[100svh] max-w-6xl flex-col px-5 pt-8">
+    <Logo
+      variant="croissant"
+      title="Run with Le Tigre"
+      class="w-52 text-brand sm:w-64"
+    />
+
+    <div class="flex flex-1 flex-col justify-center py-10">
+      <p
+        class="flex items-center gap-2 font-display text-sm tracking-[0.2em] text-brand uppercase"
+      >
+        <span class="relative flex size-2.5">
+          <span
+            class="animate-pulse-ring absolute inline-flex size-full rounded-full bg-brand"
+          ></span>
+          <span class="relative inline-flex size-2.5 rounded-full bg-brand"
+          ></span>
+        </span>
+        {CLUB.city}
+      </p>
+
+      <h1 class="mt-4 text-[15vw] leading-[0.85] sm:text-7xl lg:text-8xl">
+        Corre,<br />
+        <span class="text-brand">desayuna</span><br />
+        y repite
+      </h1>
+
+      <p class="mt-6 max-w-md text-lg/relaxed text-white/75">
+        Somos el club de running de <strong class="font-semibold text-white"
+          >{CLUB.meetingPoint}</strong
+        >. Salimos <strong class="font-semibold text-white"
+          >{CLUB.day.toLowerCase()} a las {CLUB.time}</strong
+        >, sin fichas ni cuotas. Sólo hay que aparecer.
+      </p>
+
+      <SocialLinks class="mt-8" />
+
+      <!-- Datos clave de la salida -->
+      <dl class="mt-10 grid grid-cols-3 gap-3 border-t-2 border-brand/25 pt-5">
+        <div>
+          <dt class="text-xs tracking-wider text-white/50 uppercase">Cuándo</dt>
+          <dd class="mt-1 font-display text-2xl text-brand sm:text-3xl">
+            {CLUB.day} {CLUB.time}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-xs tracking-wider text-white/50 uppercase">Ritmo</dt>
+          <dd class="mt-1 font-display text-2xl text-brand sm:text-3xl">
+            {CLUB.pace}
+          </dd>
+          <dd class="text-xs text-white/50">{CLUB.paceUnit}</dd>
+        </div>
+        <div>
+          <dt class="text-xs tracking-wider text-white/50 uppercase">Precio</dt>
+          <dd class="mt-1 font-display text-2xl text-brand sm:text-3xl">0 €</dd>
+          <dd class="text-xs text-white/50">café incluido</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</header>

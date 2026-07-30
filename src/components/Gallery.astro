@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets'
+import Reveal from './Reveal.astro'
+import avion from '../assets/letigre-avion.jpg'
+import playa from '../assets/letigre-playa.jpg'
+import tienda from '../assets/letigre-tienda.png'
+import tienda2 from '../assets/letigre-tienda-2.png'
+
+const photos = [
+  {
+    src: tienda,
+    alt: 'El grupo del club posando delante de la fachada de Le Tigré Cakes',
+    caption: 'Punto de encuentro: la puerta de Le Tigré Cakes.',
+    featured: true
+  },
+  {
+    src: avion,
+    alt: 'El grupo calentando junto a la pista del aeropuerto mientras aterriza un avión',
+    caption: 'Aviones a 100 metros. Ventajas de correr en El Prat.'
+  },
+  {
+    src: playa,
+    alt: 'Foto de grupo del club en la playa del Prat después de una salida',
+    caption: 'Foto de grupo obligatoria. Siempre.'
+  },
+  {
+    src: tienda2,
+    alt: 'Otra foto de grupo del club a la vuelta de la salida, en la puerta de Le Tigré',
+    caption: 'Cada sábado somos unos cuantos más.',
+    featured: true
+  }
+]
+---
+
+<section class="mx-auto max-w-6xl px-5 pb-20 sm:pb-28">
+  <Reveal>
+    <h2 class="text-4xl text-balance sm:text-5xl lg:text-6xl">
+      Un sábado <span class="text-brand">cualquiera</span>
+    </h2>
+    <p class="mt-5 max-w-prose text-base/relaxed text-white/70 md:text-lg/relaxed">
+      Nos juntamos en la puerta, café, charla y salimos. A la vuelta, croissants
+      y foto de grupo.
+    </p>
+  </Reveal>
+
+  <div class="mt-8 grid gap-4 sm:grid-cols-2">
+    {
+      photos.map((photo, index) => (
+        <Reveal delay={index * 100} class={photo.featured ? 'sm:col-span-2' : ''}>
+          <figure class="group relative overflow-hidden rounded-3xl border-2 border-brand/25">
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              widths={[420, 720, 1080, 1440]}
+              sizes={
+                photo.featured
+                  ? '(min-width: 1024px) 1024px, 100vw'
+                  : '(min-width: 640px) 50vw, 100vw'
+              }
+              loading="lazy"
+              class:list={[
+                'w-full object-cover transition duration-700 group-hover:scale-105',
+                photo.featured ? 'aspect-[4/3]' : 'aspect-[4/5]'
+              ]}
+            />
+            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950 via-ink-950/70 to-transparent p-4 pt-12 text-sm text-white/85">
+              {photo.caption}
+            </figcaption>
+          </figure>
+        </Reveal>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,32 @@
+---
+import catOnly from '../../public/cat-only.svg?raw'
+import catLogo from '../../public/cat-logo.svg?raw'
+import croissantLogo from '../../public/croissant-logo.svg?raw'
+
+interface Props {
+  /**
+   * `cat` sólo la cara del tigre, `badge` el círculo con el texto,
+   * `croissant` el lockup horizontal con el croissant corredor.
+   */
+  variant?: 'cat' | 'badge' | 'croissant'
+  class?: string
+  title?: string
+}
+
+const { variant = 'cat', class: className = '', title } = Astro.props
+
+const sources = { cat: catOnly, badge: catLogo, croissant: croissantLogo }
+
+// Los SVG vienen de Illustrator: hay que quitar el prólogo XML (inválido en
+// HTML inline) y las medidas fijas para poder escalarlos con CSS.
+const svg = sources[variant]
+  .replace(/<\?xml[\s\S]*?\?>/, '')
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace(
+    '<svg',
+    `<svg class="${className}" ${title ? 'role="img"' : 'aria-hidden="true"'} preserveAspectRatio="xMidYMid meet"`
+  )
+  .replace('>', `>${title ? `<title>${title}</title>` : ''}`)
+---
+
+<Fragment set:html={svg} />

@@ -1,11 +1,103 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from '../layouts/Layout.astro'
+import Hero from '../components/Hero.astro'
+import Marquee from '../components/Marquee.astro'
+import ScrollVideo from '../components/ScrollVideo.astro'
+import Races from '../components/Races.astro'
+import MeetingPoint from '../components/MeetingPoint.astro'
+import Gallery from '../components/Gallery.astro'
+import Footer from '../components/Footer.astro'
+import StickyCta from '../components/StickyCta.astro'
+import { CLUB } from '../consts'
 ---
 
 <Layout>
-	<Welcome />
+  <Hero />
+
+  <Marquee
+    items={[
+      'Sábados 8:00',
+      'Café antes de salir',
+      '5:30 - 5:45 min/km',
+      'Croissants a la vuelta',
+      'Todos los ritmos'
+    ]}
+    duration="30s"
+    tilt={-2}
+    class="-mt-2"
+  />
+
+  <main>
+    <section
+      class="mx-auto max-w-6xl space-y-20 px-5 py-20 sm:space-y-28 sm:py-28"
+    >
+      <ScrollVideo
+        index="01"
+        eyebrow="Antes de salir · El café lo invitamos nosotros"
+        title="Primero el café"
+        description="La salida empieza en la puerta de Le Tigré, y no corriendo: nos quedamos un rato de charla, nos ponemos al día de la semana, de las lesiones y de la próxima carrera. Y con la charla llega un café de especialidad, cortesía de la casa. No hay que pagar nada: si vienes a correr con nosotros, el café está invitado."
+        src="/videos/web/letigre-cafes.mp4"
+        poster="/videos/web/letigre-cafes.jpg"
+        sticker="Gratis"
+      />
+
+      <ScrollVideo
+        index="02"
+        eyebrow="Después de la salida · Recuperar energías"
+        title="Y a la vuelta, croissants"
+        description="Cuando volvemos de la salida aparecen las bandejas de croissants recién hechos para reponer lo gastado. Kilómetros primero, mantequilla después. Es el único club donde el avituallamiento es mejor que el entrenamiento."
+        src="/videos/web/letigre-croissant.mp4"
+        poster="/videos/web/letigre-croissant.jpg"
+        sticker="Recién hechos"
+        flip
+      />
+    </section>
+
+    <Marquee
+      items={[
+        'Sin cuotas',
+        'Sin fichas',
+        'Sin dorsales',
+        'Sólo hay que aparecer'
+      ]}
+      variant="ghost"
+      duration="24s"
+      reverse
+      tilt={1.5}
+    />
+
+    <section class="mx-auto max-w-6xl px-5 py-20 sm:py-28">
+      <ScrollVideo
+        index="03"
+        eyebrow={`${CLUB.pace} ${CLUB.paceUnit}`}
+        title="Un ritmo para hablar"
+        description="Vamos entre 5:30 y 5:45 el kilómetro: lo bastante cómodo para ir de charla y lo bastante serio para que el sábado cuente. Nadie se queda solo por detrás y nadie sale disparado por delante. Si es tu primera vez, avísanos en el grupo y alguien va contigo."
+        src="/videos/web/letgire-running-2.mp4"
+        poster="/videos/web/letgire-running-2.jpg"
+        sticker="Nadie se queda atrás"
+      />
+    </section>
+
+    <MeetingPoint />
+
+    <Races />
+
+    <Marquee
+      items={[
+        'Nos vemos el sábado',
+        'Tú trae zapatillas',
+        'Del café ya nos ocupamos',
+        'Y de los croissants'
+      ]}
+      duration="26s"
+      tilt={-1.5}
+    />
+
+    <div class="pt-20 sm:pt-28">
+      <Gallery />
+    </div>
+  </main>
+
+  <Footer />
+  <StickyCta />
 </Layout>

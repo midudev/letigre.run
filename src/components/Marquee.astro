@@ -1,0 +1,74 @@
+---
+interface Props {
+  /** Textos que se repiten en la cinta */
+  items: string[]
+  /** Duración de una vuelta completa */
+  duration?: string
+  reverse?: boolean
+  /** Inclinación en grados */
+  tilt?: number
+  variant?: 'solid' | 'ghost'
+  class?: string
+}
+
+const {
+  items,
+  duration = '28s',
+  reverse = false,
+  tilt = 0,
+  variant = 'solid',
+  class: className = ''
+} = Astro.props
+
+const wrapper =
+  variant === 'solid'
+    ? 'bg-brand text-ink-950'
+    : 'bg-ink-900 text-brand border-y border-brand/25'
+
+// Dos grupos idénticos, cada uno de al menos el ancho de la pantalla: la
+// animación desplaza un grupo entero, así la cinta nunca deja hueco.
+const groups = [0, 1]
+
+// Repetir los textos dentro de cada grupo evita que `justify-around` tenga
+// espacio de sobra que repartir y separe las frases en pantallas anchas.
+const repeated = [items, items, items].flat()
+---
+
+<div
+  class:list={[
+    'relative flex overflow-hidden py-3',
+    // Al inclinar la cinta se destaparían las esquinas: la sacamos del viewport
+    tilt !== 0 && '-mx-[6%] w-[112%]',
+    wrapper,
+    className
+  ]}
+  style={`transform: rotate(${tilt}deg);`}
+>
+  {
+    groups.map((groupIndex) => (
+      <div
+        class:list={[
+          'flex min-w-full shrink-0 items-center justify-around gap-5 will-change-transform',
+          reverse ? 'animate-marquee-reverse' : 'animate-marquee'
+        ]}
+        style={`--marquee-duration: ${duration};`}
+        aria-hidden={groupIndex === 1 ? 'true' : undefined}
+      >
+        {repeated.map((item) => (
+          <span class="flex shrink-0 items-center gap-5">
+            <span class="font-display text-xl whitespace-nowrap uppercase sm:text-2xl">
+              {item}
+            </span>
+            <span
+              aria-hidden="true"
+              class:list={[
+                'size-1.5 shrink-0 rotate-45',
+                variant === 'solid' ? 'bg-ink-950/40' : 'bg-brand/40'
+              ]}
+            />
+          </span>
+        ))}
+      </div>
+    ))
+  }
+</div>

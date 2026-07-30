@@ -1,0 +1,122 @@
+---
+import Reveal from './Reveal.astro'
+
+interface Props {
+  src: string
+  poster: string
+  /** Etiqueta pequeña sobre el título */
+  eyebrow: string
+  title: string
+  description: string
+  /** Pegatina que flota sobre el vídeo */
+  sticker?: string
+  /** Coloca el vídeo a la derecha en pantallas grandes */
+  flip?: boolean
+  /** Numerito grande decorativo */
+  index: string
+}
+
+const { src, poster, eyebrow, title, description, sticker, flip = false, index } =
+  Astro.props
+---
+
+<article
+  class="grid items-center gap-8 md:grid-cols-2 md:gap-14 lg:gap-20"
+  data-scroll-video-section
+>
+  <Reveal class:list={['relative', flip && 'md:order-2']}>
+    <div
+      class="relative overflow-hidden rounded-[2rem] border-2 border-brand/40 bg-ink-800 shadow-[0_0_60px_-15px] shadow-brand/30"
+    >
+      <video
+        class="aspect-[9/16] w-full object-cover"
+        src={src}
+        poster={poster}
+        muted
+        loop
+        playsinline
+        preload="none"
+        disablepictureinpicture
+        tabindex="-1"
+        aria-label={title}
+        data-scroll-video></video>
+
+      <!-- Barra de progreso del clip -->
+      <div class="absolute inset-x-0 bottom-0 h-1 bg-ink-950/50">
+        <div class="h-full w-0 bg-brand" data-video-progress></div>
+      </div>
+    </div>
+
+    {
+      sticker && (
+        <span
+          class="animate-float absolute -top-4 -right-3 z-10 rounded-full bg-brand px-4 py-2 font-display text-sm text-ink-950 uppercase shadow-lg md:text-base"
+        >
+          {sticker}
+        </span>
+      )
+    }
+  </Reveal>
+
+  <Reveal delay={120} class:list={[flip && 'md:order-1']}>
+    <span
+      aria-hidden="true"
+      class="block font-display text-6xl leading-none text-brand/15 md:text-8xl"
+    >
+      {index}
+    </span>
+
+    <p
+      class="mt-2 font-display text-sm tracking-[0.25em] text-brand uppercase md:text-base"
+    >
+      {eyebrow}
+    </p>
+
+    <h2 class="mt-3 text-4xl text-balance sm:text-5xl lg:text-6xl">
+      {title}
+    </h2>
+
+    <p class="mt-5 max-w-prose text-base/relaxed text-white/70 md:text-lg/relaxed">
+      {description}
+    </p>
+  </Reveal>
+</article>
+
+<script>
+  const videos =
+    document.querySelectorAll<HTMLVideoElement>('[data-scroll-video]')
+
+  // Cada vídeo arranca al entrar en pantalla y se pausa al salir, así solo se
+  // descarga (`preload="none"`) lo que el usuario llega a ver.
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const video = entry.target as HTMLVideoElement
+
+        if (entry.isIntersecting) {
+          video.play().catch(() => {
+            // Autoplay bloqueado (p.ej. ahorro de datos): se queda el poster
+          })
+        } else {
+          video.pause()
+        }
+      }
+    },
+    { threshold: 0.35 }
+  )
+
+  for (const video of videos) {
+    observer.observe(video)
+
+    const progress = video
+      .closest('[data-scroll-video-section]')
+      ?.querySelector<HTMLElement>('[data-video-progress]')
+
+    if (!progress) continue
+
+    video.addEventListener('timeupdate', () => {
+      if (!video.duration) return
+      progress.style.width = `${(video.currentTime / video.duration) * 100}%`
+    })
+  }
+</script>

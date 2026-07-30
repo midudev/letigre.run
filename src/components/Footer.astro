@@ -1,0 +1,53 @@
+---
+import { CLUB, SITE } from '../consts'
+import Logo from './Logo.astro'
+import Reveal from './Reveal.astro'
+import SocialLinks from './SocialLinks.astro'
+---
+
+<!-- `pb-28` deja hueco para el CTA fijo de móvil -->
+<footer
+  id="unete"
+  class="relative overflow-hidden border-t-2 border-brand/25 pb-24 md:pb-0"
+>
+  <Logo
+    variant="cat"
+    class="animate-spin-slow pointer-events-none absolute -bottom-20 -left-20 w-64 text-brand/5"
+  />
+
+  <div class="relative mx-auto max-w-6xl px-5 py-16 sm:py-24">
+    <Reveal>
+      <Logo
+        variant="badge"
+        title={SITE.name}
+        class="w-28 text-brand sm:w-32"
+      />
+
+      <h2 class="mt-8 text-4xl text-balance sm:text-5xl lg:text-6xl">
+        Nos vemos el<br />
+        <span class="text-brand">sábado a las {CLUB.time}</span>
+      </h2>
+
+      <address
+        class="mt-6 text-base/relaxed text-white/70 not-italic md:text-lg/relaxed"
+      >
+        {CLUB.meetingPoint} · {CLUB.street} · {CLUB.city}
+      </address>
+
+      <a
+        href="#donde"
+        class="mt-2 inline-flex items-center gap-1.5 text-sm text-brand underline decoration-brand/40 underline-offset-4 hover:decoration-brand"
+      >
+        Ver cómo llegar
+      </a>
+
+      <SocialLinks variant="inline" class="mt-8" />
+    </Reveal>
+
+    <Reveal delay={120}>
+      <p class="mt-12 text-xs text-white/40">
+        © {new Date().getFullYear()} {SITE.name} · Hecho con cafeína en El Prat
+      </p>
+    </Reveal>
+  </div>
+</footer>

@@ -1,0 +1,285 @@
+---
+import { Image } from 'astro:assets'
+import { CLUB, LINKS } from '../consts'
+import Reveal from './Reveal.astro'
+import tienda from '../assets/letigre-tienda.png'
+---
+
+<section id="donde" class="mx-auto max-w-6xl px-5 py-20 sm:py-28">
+  <div class="grid items-center gap-8 md:grid-cols-2 md:gap-14">
+    <Reveal>
+      <p
+        class="font-display text-sm tracking-[0.25em] text-brand uppercase sm:text-base"
+      >
+        Cómo llegar
+      </p>
+      <h2 class="mt-3 text-4xl text-balance sm:text-5xl lg:text-6xl">
+        Nos vemos en<br />
+        <span class="text-brand">la puerta</span>
+      </h2>
+
+      <address
+        class="mt-6 text-base/relaxed text-white/70 not-italic md:text-lg/relaxed"
+      >
+        <strong class="font-semibold text-white">{CLUB.meetingPoint}</strong><br
+        />
+        {CLUB.street}<br />
+        {CLUB.postalCode} · {CLUB.city}
+      </address>
+
+      <p class="mt-4 text-sm/relaxed text-white/55">
+        Estamos en el casco antiguo del Prat, a diez minutos andando de la
+        estación de Renfe. Salimos a las {CLUB.time} en punto, así que mejor
+        llegar unos minutos antes para el café.
+      </p>
+
+      <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+        <a
+          href={LINKS.directions}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 font-display text-base text-ink-950 uppercase transition hover:bg-lime-brand-300 active:scale-95"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-5 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 11 22 2l-9 19-2-8-8-2Z"></path>
+          </svg>
+          Cómo llegar
+        </a>
+
+        <a
+          href={LINKS.maps}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand/50 px-6 py-3.5 font-display text-base text-brand uppercase transition hover:border-brand hover:bg-brand/10 active:scale-95"
+        >
+          Ver en Google Maps
+        </a>
+      </div>
+    </Reveal>
+
+    <Reveal delay={120}>
+      <div
+        class="relative overflow-hidden rounded-[2rem] border-2 border-brand/40 shadow-[0_0_60px_-15px] shadow-brand/30"
+      >
+        <!-- El mapa se monta encima cuando entra en pantalla; hasta entonces se
+             ve este marcador estático para que el bloque nunca esté vacío -->
+        <div
+          class="aspect-square w-full bg-ink-800 sm:aspect-[4/3] md:aspect-square"
+          data-map
+          data-lat={CLUB.coords.lat}
+          data-lng={CLUB.coords.lng}
+        >
+          <div
+            class="flex size-full flex-col items-center justify-center gap-3 text-brand/70"
+            data-map-placeholder
+          >
+            <svg
+              aria-hidden="true"
+              class="size-10"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path d="M12 22s7-6.3 7-12a7 7 0 1 0-14 0c0 5.7 7 12 7 12Z"></path>
+              <circle cx="12" cy="10" r="2.5"></circle>
+            </svg>
+            <span class="font-display text-sm uppercase">Cargando mapa</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-3 text-center text-[0.7rem] text-white/35">
+        Mapa © <a
+          href="https://www.openstreetmap.org/copyright"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline decoration-white/20 hover:text-white/60"
+          >OpenStreetMap</a
+        > · Teselas © <a
+          href="https://carto.com/attributions"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline decoration-white/20 hover:text-white/60">CARTO</a
+        >
+      </p>
+    </Reveal>
+  </div>
+
+  <!-- Contenido del bocadillo del mapa. Se renderiza aquí (y no en el script)
+       para poder usar la imagen ya optimizada por Astro -->
+  <template data-map-popup>
+    <div class="w-[13rem]">
+      <Image
+        src={tienda}
+        alt="El grupo del club en la puerta de Le Tigré Cakes"
+        widths={[260, 520]}
+        sizes="208px"
+        loading="lazy"
+        class="aspect-[4/3] w-full rounded-xl object-cover"
+      />
+      <p class="mt-2 font-display text-sm text-brand uppercase">
+        {CLUB.meetingPoint}
+      </p>
+      <p class="mt-0.5 text-xs/relaxed text-white/60">
+        {CLUB.street}<br />
+        {CLUB.day} a las {CLUB.time}
+      </p>
+    </div>
+  </template>
+</section>
+
+<script>
+  import { COLORS } from '../consts'
+
+  const container = document.querySelector<HTMLElement>('[data-map]')
+  const popupTemplate =
+    document.querySelector<HTMLTemplateElement>('[data-map-popup]')
+
+  if (container) {
+    const lat = Number(container.dataset.lat)
+    const lng = Number(container.dataset.lng)
+
+    // MapLibre pesa bastante: sólo se descarga cuando el bloque entra en pantalla
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return
+        observer.disconnect()
+
+        const { Map, Marker, Popup } = await import('maplibre-gl')
+        await import('maplibre-gl/dist/maplibre-gl.css')
+
+        container.querySelector('[data-map-placeholder]')?.remove()
+
+        const map = new Map({
+          container,
+          center: [lng, lat],
+          zoom: 15.4,
+          attributionControl: false,
+          cooperativeGestures: true,
+          style: {
+            version: 8,
+            sources: {
+              carto: {
+                type: 'raster',
+                tiles: [
+                  'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+                  'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+                  'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png'
+                ],
+                tileSize: 256,
+                attribution: '© OpenStreetMap, © CARTO'
+              }
+            },
+            layers: [
+              {
+                id: 'bg',
+                type: 'background',
+                paint: { 'background-color': COLORS.ink }
+              },
+              { id: 'carto', type: 'raster', source: 'carto' }
+            ]
+          }
+        })
+
+        // Marcador con los colores de la camiseta y un pulso alrededor
+        const pin = document.createElement('div')
+        pin.className = 'letigre-pin'
+        pin.innerHTML =
+          '<span class="letigre-pin__ring"></span><span class="letigre-pin__dot"></span>'
+
+        const marker = new Marker({ element: pin, anchor: 'center' })
+          .setLngLat([lng, lat])
+          .addTo(map)
+
+        if (popupTemplate) {
+          const content = document.createElement('div')
+          content.append(popupTemplate.content.cloneNode(true))
+
+          const popup = new Popup({
+            offset: 18,
+            closeButton: false,
+            closeOnClick: false,
+            focusAfterOpen: false,
+            maxWidth: 'none',
+            className: 'letigre-popup'
+          }).setDOMContent(content)
+
+          marker.setPopup(popup).togglePopup()
+
+          // El bocadillo tapa media pantalla en móvil: se centra el mapa un poco
+          // más abajo para que quepan el pin y la tarjeta
+          map.once('load', () => map.panBy([0, 70], { duration: 0 }))
+        }
+      },
+      { rootMargin: '200px' }
+    )
+
+    observer.observe(container)
+  }
+</script>
+
+<style is:global>
+  /* El basemap oscuro de CARTO es gris azulado: este filtro lo empuja hacia el
+     verde de la marca sin tener que mantener un estilo vectorial entero */
+  [data-map] .maplibregl-canvas {
+    filter: hue-rotate(-35deg) saturate(0.65) brightness(0.95);
+  }
+
+  [data-map] .maplibregl-ctrl-bottom-right,
+  [data-map] .maplibregl-ctrl-bottom-left {
+    display: none;
+  }
+
+  .letigre-pin {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .letigre-pin__dot,
+  .letigre-pin__ring {
+    grid-area: 1 / 1;
+    border-radius: 9999px;
+  }
+
+  .letigre-pin__dot {
+    width: 1.1rem;
+    height: 1.1rem;
+    background: var(--color-brand);
+    border: 3px solid var(--color-ink-950);
+  }
+
+  .letigre-pin__ring {
+    width: 3rem;
+    height: 3rem;
+    background: color-mix(in oklab, var(--color-brand) 35%, transparent);
+    animation: pulse-ring 2.4s ease-out infinite;
+  }
+
+  /* Bocadillo con el estilo de la web en lugar del blanco por defecto */
+  .letigre-popup .maplibregl-popup-content {
+    padding: 0.6rem;
+    border: 2px solid color-mix(in oklab, var(--color-brand) 55%, transparent);
+    border-radius: 1.1rem;
+    background: var(--color-ink-950);
+    box-shadow: 0 18px 45px -12px rgb(0 0 0 / 0.8);
+  }
+
+  .letigre-popup .maplibregl-popup-tip {
+    border-top-color: var(--color-brand);
+    border-bottom-color: var(--color-brand);
+    border-top-width: 10px;
+    border-bottom-width: 10px;
+  }
+</style>

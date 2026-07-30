@@ -1,0 +1,35 @@
+---
+import { LINKS } from '../consts'
+---
+
+<!-- Barra fija en móvil: el CTA siempre a un pulgar de distancia -->
+<div
+  class="pointer-events-none fixed inset-x-0 bottom-0 z-50 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-transform duration-300 data-[hidden]:translate-y-[130%] md:hidden"
+  data-sticky-cta
+  data-hidden
+>
+  <a
+    href={LINKS.whatsapp}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="pointer-events-auto flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-4 font-display text-lg text-ink-950 uppercase shadow-[0_10px_40px_-10px] shadow-brand/60 active:scale-95"
+  >
+    Únete al grupo
+  </a>
+</div>
+
+<script>
+  const cta = document.querySelector<HTMLElement>('[data-sticky-cta]')
+  const hero = document.querySelector('header')
+
+  if (cta && hero) {
+    // Sólo aparece cuando el hero (que ya tiene sus propios botones) sale de pantalla
+    new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) cta.setAttribute('data-hidden', '')
+        else cta.removeAttribute('data-hidden')
+      },
+      { threshold: 0.15 }
+    ).observe(hero)
+  }
+</script>

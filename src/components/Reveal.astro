@@ -1,0 +1,40 @@
+---
+interface Props {
+  /** Retardo de la animación en ms */
+  delay?: number
+  as?: 'div' | 'li' | 'section' | 'article' | 'span'
+  class?: string
+}
+
+const { delay = 0, as: Tag = 'div', class: className = '' } = Astro.props
+---
+
+<Tag class:list={['reveal', className]} style={`--reveal-delay: ${delay}ms;`}>
+  <slot />
+</Tag>
+
+<script>
+  const show = (element: Element) => {
+    element.classList.add('is-visible')
+    observer.unobserve(element)
+  }
+
+  // `threshold: 0` para que baste con asomar: los bloques con vídeo miden casi
+  // una pantalla y con un umbral alto el texto de al lado tardaba en aparecer.
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        // `bottom <= 0` cubre recargar la página a media altura: lo que ya
+        // quedó por encima se muestra sin animación en vez de quedar invisible
+        if (entry.isIntersecting || entry.boundingClientRect.bottom <= 0) {
+          show(entry.target)
+        }
+      }
+    },
+    { threshold: 0, rootMargin: '0px 0px -8% 0px' }
+  )
+
+  for (const element of document.querySelectorAll('.reveal')) {
+    observer.observe(element)
+  }
+</script>
