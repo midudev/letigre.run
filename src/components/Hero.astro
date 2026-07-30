@@ -60,7 +60,7 @@ import SocialLinks from '@/components/SocialLinks.astro'
     class="pointer-events-none absolute -top-10 -right-24 -z-10 w-[70vw] max-w-lg text-brand/10"
   />
 
-  <div class="mx-auto flex min-h-[100svh] max-w-6xl flex-col px-5 pt-8">
+  <div class="container-page flex min-h-[100svh] flex-col pt-8">
     <Logo
       variant="croissant"
       title="Run with Le Tigre"
@@ -95,27 +95,21 @@ import SocialLinks from '@/components/SocialLinks.astro'
         class="mt-10 grid grid-cols-2 gap-4 border-t-2 border-brand/25 pt-5 sm:grid-cols-3"
       >
         <div>
-          <dt class="text-xs tracking-wider text-white/50 uppercase">Cuándo</dt>
-          <dd
-            class="mt-1 font-display text-2xl text-brand sm:text-3xl"
-            data-tabular
-          >
+          <dt class="stat-label">Cuándo</dt>
+          <dd class="stat-value" data-tabular>
             {CLUB.day} {CLUB.time}
           </dd>
         </div>
         <div>
-          <dt class="text-xs tracking-wider text-white/50 uppercase">Ritmo</dt>
-          <dd
-            class="mt-1 font-display text-2xl text-brand sm:text-3xl"
-            data-tabular
-          >
+          <dt class="stat-label">Ritmo</dt>
+          <dd class="stat-value" data-tabular>
             {CLUB.pace}
           </dd>
           <dd class="text-xs text-white/50">{CLUB.paceUnit}</dd>
         </div>
         <div class="hidden sm:block">
-          <dt class="text-xs tracking-wider text-white/50 uppercase">Precio</dt>
-          <dd class="mt-1 font-display text-2xl text-brand sm:text-3xl">0 €</dd>
+          <dt class="stat-label">Precio</dt>
+          <dd class="stat-value">0 €</dd>
           <dd class="text-xs text-white/50">café incluido</dd>
         </div>
       </dl>

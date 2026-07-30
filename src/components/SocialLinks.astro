@@ -9,19 +9,12 @@ interface Props {
 
 const { variant = 'hero', class: className = '' } = Astro.props
 
-const base =
-  'group inline-flex min-w-0 items-center justify-center gap-2 rounded-full font-display uppercase transition active:scale-95'
-
 // El relleno y el cuerpo suben a partir de `sm`: con «Instagram» y su icono, un
 // `px-7 text-lg` no cabe en dos columnas en pantallas de 320 px
 const sizes =
   variant === 'hero'
     ? 'px-5 py-3.5 text-base sm:px-7 sm:py-4 sm:text-lg'
     : 'px-5 py-3 text-base'
-
-// Strava e Instagram comparten la línea en móvil, de ahí el `flex-1`
-const secondary =
-  'flex-1 border-2 border-brand/50 text-brand hover:border-brand hover:bg-brand/10 sm:flex-none'
 ---
 
 {/* En móvil WhatsApp ocupa toda la línea (es el CTA principal) y Strava e
@@ -33,15 +26,11 @@ const secondary =
     href={LINKS.whatsapp}
     target="_blank"
     rel="noopener noreferrer"
-    class:list={[
-      base,
-      sizes,
-      'bg-brand text-ink-950 hover:bg-lime-brand-300 hover:shadow-[0_0_40px_-8px] hover:shadow-brand'
-    ]}
+    class:list={['group btn-pill btn-pill-brand', sizes]}
   >
     <svg
       aria-hidden="true"
-      class="size-5 shrink-0"
+      class="icon"
       viewBox="0 0 24 24"
       fill="currentColor"
     >
@@ -57,11 +46,11 @@ const secondary =
       href={LINKS.strava}
       target="_blank"
       rel="noopener noreferrer"
-      class:list={[base, sizes, secondary]}
+      class:list={['group btn-pill btn-pill-outline', sizes]}
     >
       <svg
         aria-hidden="true"
-        class="size-5 shrink-0"
+        class="icon"
         viewBox="0 0 24 24"
         fill="currentColor"
       >
@@ -76,11 +65,11 @@ const secondary =
       href={LINKS.instagram}
       target="_blank"
       rel="noopener noreferrer"
-      class:list={[base, sizes, secondary]}
+      class:list={['group btn-pill btn-pill-outline', sizes]}
     >
       <svg
         aria-hidden="true"
-        class="size-5 shrink-0"
+        class="icon"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"

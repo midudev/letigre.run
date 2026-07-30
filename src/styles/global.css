@@ -175,6 +175,101 @@
 }
 
 /*
+ * Piezas reutilizables del UI. Viven aquí con @apply para no arrastrar la
+ * misma sarta de utilidades en cada .astro (menos HTML, un solo sitio que
+ * retocar cuando cambie el look).
+ */
+@layer components {
+  /* —— Layout —— */
+  .container-page {
+    @apply mx-auto max-w-6xl px-5;
+  }
+
+  .section {
+    @apply mx-auto max-w-6xl px-5 py-20 sm:py-28;
+  }
+
+  .split {
+    @apply grid items-center gap-8 md:grid-cols-2 md:gap-14;
+  }
+
+  .split-wide {
+    @apply grid items-center gap-8 md:grid-cols-2 md:gap-14 lg:gap-20;
+  }
+
+  /* —— Tipografía de sección —— */
+  .eyebrow {
+    @apply font-display text-sm tracking-[0.25em] text-brand uppercase sm:text-base;
+  }
+
+  .heading-section {
+    @apply text-4xl text-balance sm:text-5xl lg:text-6xl;
+  }
+
+  .lede {
+    @apply max-w-prose text-base/relaxed text-white/70 md:text-lg/relaxed;
+  }
+
+  /* —— Botones (sin anidar @apply de clases propias: Tailwind 4 no lo permite) —— */
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 font-display text-base text-ink-950 uppercase transition hover:bg-lime-brand-300 active:scale-95;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand/50 px-6 py-3.5 font-display text-base text-brand uppercase transition hover:border-brand hover:bg-brand/10 active:scale-95;
+  }
+
+  .btn-brand-cta {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-4 font-display text-lg text-ink-950 uppercase shadow-[0_10px_40px_-10px] shadow-brand/60 transition active:scale-95;
+  }
+
+  /* Pills de redes: se combinan en el HTML (`btn-pill btn-pill-brand`).
+     `group` va en el markup: no es utilidad aplicable con @apply. */
+  .btn-pill {
+    @apply inline-flex min-w-0 items-center justify-center gap-2 rounded-full font-display uppercase transition active:scale-95;
+  }
+
+  .btn-pill-brand {
+    @apply bg-brand text-ink-950 hover:bg-lime-brand-300 hover:shadow-[0_0_40px_-8px] hover:shadow-brand;
+  }
+
+  .btn-pill-outline {
+    @apply flex-1 border-2 border-brand/50 text-brand hover:border-brand hover:bg-brand/10 sm:flex-none;
+  }
+
+  .icon {
+    @apply size-5 shrink-0;
+  }
+
+  /* —— Marcos de media (vídeo, mapa) —— */
+  .frame-media {
+    @apply relative overflow-hidden rounded-[2rem] border-2 border-brand/40 shadow-[0_0_60px_-15px] shadow-brand/30;
+  }
+
+  .frame-media-ink {
+    @apply relative overflow-hidden rounded-[2rem] border-2 border-brand/40 bg-ink-800 shadow-[0_0_60px_-15px] shadow-brand/30;
+  }
+
+  /* —— Hero: stats —— */
+  .stat-label {
+    @apply text-xs tracking-wider text-white/50 uppercase;
+  }
+
+  .stat-value {
+    @apply mt-1 font-display text-2xl text-brand sm:text-3xl;
+  }
+
+  /* —— Cards (`group` se añade en el markup para group-hover) —— */
+  .card-race {
+    @apply flex h-full flex-col rounded-3xl border-2 border-brand/20 bg-ink-900/60 p-5 transition-colors hover:border-brand/60 hover:bg-brand/5;
+  }
+
+  .card-photo {
+    @apply relative overflow-hidden rounded-3xl border-2 border-brand/25;
+  }
+}
+
+/*
  * Reveal al entrar en viewport (IntersectionObserver → clase `.is-inview`).
  *
  * Por qué NO usamos `animation-timeline: view()`:

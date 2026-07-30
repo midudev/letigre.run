@@ -15,7 +15,7 @@ import SocialLinks from '@/components/SocialLinks.astro'
     class="animate-spin-slow pointer-events-none absolute -bottom-20 -left-20 w-64 text-brand/5"
   />
 
-  <div class="relative mx-auto max-w-6xl px-5 py-16 sm:py-24">
+  <div class="container-page relative py-16 sm:py-24">
     <Reveal>
       <Logo
         variant="badge"
@@ -23,14 +23,12 @@ import SocialLinks from '@/components/SocialLinks.astro'
         class="w-28 text-brand sm:w-32"
       />
 
-      <h2 class="mt-8 text-4xl text-balance sm:text-5xl lg:text-6xl">
+      <h2 class="heading-section mt-8">
         Nos vemos el<br />
         <span class="text-brand">sábado a las {CLUB.time}</span>
       </h2>
 
-      <address
-        class="mt-6 text-base/relaxed text-white/70 not-italic md:text-lg/relaxed"
-      >
+      <address class="lede mt-6 not-italic">
         {CLUB.meetingPoint} · {CLUB.street} · {CLUB.city}
       </address>
 
