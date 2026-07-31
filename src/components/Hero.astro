@@ -6,7 +6,10 @@ import NextRun from '@/components/NextRun.astro'
 import SocialLinks from '@/components/SocialLinks.astro'
 ---
 
-<header class="relative isolate min-h-[100svh] overflow-hidden pb-10">
+<header
+  id="inicio"
+  class="relative isolate min-h-[100svh] overflow-hidden pb-10"
+>
   {/* Fondo: la salida del sábado. El poster es el LCP (img propia, no el
        attr `poster` del <video>): en Mobile Safari ese attr se quita al
        play() antes del primer frame → flash negro. El <img> va ENCIMA del

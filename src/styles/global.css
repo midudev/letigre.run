@@ -310,7 +310,42 @@
 
   /* —— Cards (`group` se añade en el markup para group-hover) —— */
   .card-race {
-    @apply flex h-full flex-col rounded-3xl border-2 border-brand/20 bg-ink-900/60 p-5 transition-colors hover:border-brand/60 hover:bg-brand/5;
+    @apply relative isolate flex h-full flex-col overflow-hidden rounded-3xl border-2 border-brand/25 bg-ink-900 p-5 transition-[border-color,box-shadow] duration-300 hover:border-brand/65 hover:shadow-[0_18px_45px_-28px] hover:shadow-brand/50;
+  }
+
+  .card-race__image {
+    @apply pointer-events-none absolute inset-y-0 right-0 z-0 h-full w-auto max-w-none scale-105 object-cover opacity-80 saturate-110 transition-[transform,opacity] duration-500 ease-out;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgb(0 0 0 / 0.18) 12%,
+      rgb(0 0 0 / 0.72) 28%,
+      black 44%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgb(0 0 0 / 0.18) 12%,
+      rgb(0 0 0 / 0.72) 28%,
+      black 44%
+    );
+  }
+
+  .card-race:hover .card-race__image {
+    @apply scale-110 opacity-90;
+  }
+
+  .card-race__shade {
+    @apply pointer-events-none absolute inset-0 z-10;
+    background: linear-gradient(
+      to top,
+      rgb(6 3 11 / 0.5),
+      transparent 68%
+    );
+  }
+
+  .card-race__content {
+    @apply relative z-20 flex h-full flex-col;
   }
 
   .card-photo {

@@ -77,6 +77,8 @@ export interface Race {
   place: string
   /** Una frase que explique qué tiene de especial */
   blurb: string
+  /** Fondo local de la tarjeta. Cada carrera debe usar una imagen distinta. */
+  image: string
   /** `full` cuando ya no quedan plazas para el grupo */
   status?: 'full'
 }
@@ -88,7 +90,8 @@ export const RACES: Race[] = [
     km: 7,
     place: 'Palau-solità i Plegamans',
     blurb:
-      'Casi 7 km por el bosque de Can Pavana, dentro de la fiesta mayor del pueblo. Tierra, sombra y ambiente de verbena.'
+      'Casi 7 km por el bosque de Can Pavana, dentro de la fiesta mayor del pueblo. Tierra, sombra y ambiente de verbena.',
+    image: '/images/races/cursa-maria-victor.webp'
   },
   {
     date: '2026-09-05',
@@ -96,7 +99,8 @@ export const RACES: Race[] = [
     km: 10,
     place: 'Praga',
     blurb:
-      '10K de noche por el centro histórico de Praga, con el casco antiguo iluminado y música en cada kilómetro.'
+      '10K de noche por el centro histórico de Praga, con el casco antiguo iluminado y música en cada kilómetro.',
+    image: '/images/races/prague-night-run.webp'
   },
   {
     date: '2026-09-18',
@@ -104,7 +108,8 @@ export const RACES: Race[] = [
     km: 5,
     place: 'Copenhague',
     blurb:
-      'El 5K de la víspera: sirve para soltar piernas y reconocer el ambiente antes del medio maratón del día siguiente.'
+      'El 5K de la víspera: sirve para soltar piernas y reconocer el ambiente antes del medio maratón del día siguiente.',
+    image: '/images/races/copenhagen-5k.webp'
   },
   {
     date: '2026-09-19',
@@ -112,7 +117,17 @@ export const RACES: Race[] = [
     km: 21,
     place: 'Copenhague',
     blurb:
-      'Uno de los medios maratones más rápidos del mundo: llano de principio a fin y con varios récords batidos en su asfalto.'
+      'Uno de los medios maratones más rápidos del mundo: llano de principio a fin y con varios récords batidos en su asfalto.',
+    image: '/images/races/copenhagen-half.webp'
+  },
+  {
+    date: '2026-09-20',
+    name: 'Cursa Popular del Prat',
+    km: 10,
+    place: 'El Prat de Llobregat',
+    blurb:
+      'La 10K de casa, dentro de la Festa Major del Prat. Una mañana para correr por nuestras calles con todo el ambiente del pueblo.',
+    image: '/images/races/cursa-popular-prat.webp'
   },
   {
     date: '2026-10-04',
@@ -120,7 +135,8 @@ export const RACES: Race[] = [
     km: 21,
     place: 'Logroño',
     blurb:
-      'La media del Maratón Internacional de Logroño. Urbana, tranquila y con el mejor avituallamiento post-carrera de La Rioja.'
+      'La media del Maratón Internacional de Logroño. Urbana, tranquila y con el mejor avituallamiento post-carrera de La Rioja.',
+    image: '/images/races/media-logrono.webp'
   },
   {
     date: '2026-10-18',
@@ -128,7 +144,8 @@ export const RACES: Race[] = [
     km: 10,
     place: 'Barcelona',
     blurb:
-      'Se corre por dentro del mercado mayorista: calles, pabellones de frutas y hortalizas y la lonja del pescado. No se repite en ningún otro 10K.'
+      'Se corre por dentro del mercado mayorista: calles, pabellones de frutas y hortalizas y la lonja del pescado. No se repite en ningún otro 10K.',
+    image: '/images/races/cursa-mercabarna.webp'
   },
   {
     date: '2026-10-25',
@@ -136,7 +153,8 @@ export const RACES: Race[] = [
     km: 21,
     place: 'Valencia',
     blurb:
-      'La media maratón más rápida del planeta. Circuito plano, público en todo el recorrido y marca personal casi garantizada.'
+      'La media maratón más rápida del planeta. Circuito plano, público en todo el recorrido y marca personal casi garantizada.',
+    image: '/images/races/valencia-half.webp'
   },
   {
     date: '2026-11-08',
@@ -144,7 +162,8 @@ export const RACES: Race[] = [
     km: 20,
     place: 'Guipúzcoa',
     blurb:
-      'La clásica: 20 km de Behobia a Donosti con el Alto de Gaintxurizketa en medio y miles de personas animando en la carretera.'
+      'La clásica: 20 km de Behobia a Donosti con el Alto de Gaintxurizketa en medio y miles de personas animando en la carretera.',
+    image: '/images/races/behobia-san-sebastian.webp'
   },
   {
     date: '2026-11-29',
@@ -152,7 +171,8 @@ export const RACES: Race[] = [
     km: 10,
     place: 'Barcelona',
     blurb:
-      'La carrera popular más antigua de España. 10K por Montjuïc y el centro de Barcelona con más de un siglo de historia.'
+      'La carrera popular más antigua de España. 10K por Montjuïc y el centro de Barcelona con más de un siglo de historia.',
+    image: '/images/races/jean-bouin.webp'
   },
   {
     date: '2026-12-06',
@@ -160,7 +180,8 @@ export const RACES: Race[] = [
     km: 42,
     place: 'Valencia',
     blurb:
-      'El maratón del año: llano, rapidísimo y con meta flotando sobre la pasarela azul de la Ciudad de las Artes.'
+      'El maratón del año: llano, rapidísimo y con meta flotando sobre la pasarela azul de la Ciudad de las Artes.',
+    image: '/images/races/valencia-marathon.webp'
   },
   {
     date: '2026-12-12',
@@ -169,7 +190,8 @@ export const RACES: Race[] = [
     place: 'Barcelona',
     status: 'full',
     blurb:
-      'Cupo lleno, pero el año que viene se puede repetir. Pregúntanos y te contamos qué tal es la experiencia de dar vueltas 24 horas seguidas.'
+      'Cupo lleno, pero el año que viene se puede repetir. Pregúntanos y te contamos qué tal es la experiencia de dar vueltas 24 horas seguidas.',
+    image: '/images/races/barcelona-24h.webp'
   },
   {
     date: '2026-12-31',
@@ -177,9 +199,15 @@ export const RACES: Race[] = [
     km: 10,
     place: 'Barcelona',
     blurb:
-      'La San Silvestre de Barcelona: 10K el 31 de diciembre para despedir el año corriendo antes de la cena.'
+      'La San Silvestre de Barcelona: 10K el 31 de diciembre para despedir el año corriendo antes de la cena.',
+    image: '/images/races/cursa-dels-nassos.webp'
   }
 ]
+
+const raceImages = RACES.map((race) => race.image)
+if (new Set(raceImages).size !== raceImages.length) {
+  throw new Error('Cada carrera debe tener una imagen de fondo distinta')
+}
 
 export interface FaqItem {
   question: string

@@ -6,10 +6,20 @@ interface Props {
   pitch?: number
   /** Lado del píxel dentro de la celda */
   dot?: number
+  /** Borde hacia el que el tramado termina en negro sólido */
+  direction?: 'bottom' | 'left'
   class?: string
 }
 
-const { pitch = 4, dot = 2, class: className = '' } = Astro.props
+const {
+  pitch = 4,
+  dot = 2,
+  direction = 'bottom',
+  class: className = ''
+} = Astro.props
+
+const isHorizontal = direction === 'left'
+const maskDirection = isHorizontal ? 'to left' : 'to bottom'
 
 /**
  * Rejilla densa de píxeles diminutos, del mismo tamaño de arriba abajo: lo que
@@ -46,7 +56,11 @@ const pixelTile = `url("data:image/svg+xml,${svg
 
 <div
   aria-hidden="true"
-  class:list={['pointer-events-none absolute inset-x-0 bottom-0', className]}
+  class:list={[
+    'pointer-events-none absolute',
+    isHorizontal ? 'inset-0' : 'inset-x-0 bottom-0',
+    className
+  ]}
 >
   {
     LAYERS.map(({ offset, mask }) => (
@@ -57,17 +71,20 @@ const pixelTile = `url("data:image/svg+xml,${svg
           background-size: ${pitch}px ${pitch}px;
           background-position: ${offset};
           image-rendering: pixelated;
-          -webkit-mask-image: linear-gradient(to bottom, ${mask});
-          mask-image: linear-gradient(to bottom, ${mask});
+          -webkit-mask-image: linear-gradient(${maskDirection}, ${mask});
+          mask-image: linear-gradient(${maskDirection}, ${mask});
         `}
       />
     ))
   }
 
-  {/* Los píxeles cubren la mitad de la superficie: este degradado cierra el
-       último tramo y enlaza con el negro de la sección siguiente */}
-  <div
-    class="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-b from-transparent via-ink-950/60 to-ink-950"
-  >
-  </div>
+  {
+    isHorizontal ? (
+      <div class="absolute inset-y-0 left-0 w-[45%] bg-gradient-to-r from-ink-950 via-ink-950/60 to-transparent" />
+    ) : (
+      /* Los píxeles cubren la mitad de la superficie: este degradado cierra el
+         último tramo y enlaza con el negro de la sección siguiente */
+      <div class="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-b from-transparent via-ink-950/60 to-ink-950" />
+    )
+  }
 </div>

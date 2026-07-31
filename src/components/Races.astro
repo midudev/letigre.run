@@ -1,5 +1,6 @@
 ---
 import { formatRaceDate, upcomingRaces, LINKS } from '@/consts'
+import HalftoneFade from '@/components/HalftoneFade.astro'
 import Reveal from '@/components/Reveal.astro'
 
 const races = upcomingRaces()
@@ -32,40 +33,66 @@ const races = upcomingRaces()
               rel="noopener noreferrer"
               class="card-race group"
             >
-              <div class="flex items-start gap-4">
-                <span class="flex w-12 shrink-0 flex-col items-center leading-none">
-                  <span class="font-display text-3xl text-brand">{day}</span>
-                  <span class="mt-1 text-[0.65rem] tracking-widest text-white/50 uppercase">
-                    {month}
-                  </span>
-                </span>
+              <img
+                src={race.image}
+                alt=""
+                width="1200"
+                height="675"
+                loading="lazy"
+                decoding="async"
+                class="card-race__image"
+              />
+              <HalftoneFade direction="left" class="z-10" />
+              <span class="card-race__shade" aria-hidden="true"></span>
 
-                <span class="min-w-0 flex-1">
-                  <span class="block font-display text-xl leading-tight uppercase">
-                    {race.name}
+              <div class="card-race__content">
+                <div class="flex items-start gap-4">
+                  <span class="flex w-12 shrink-0 flex-col items-center leading-none">
+                    <span class="font-display text-3xl text-brand">{day}</span>
+                    <span class="mt-1 text-[0.65rem] tracking-widest text-white/60 uppercase">
+                      {month}
+                    </span>
                   </span>
-                  <span class="text-xs tracking-wider text-white/45 uppercase">
-                    {race.place}
-                  </span>
-                </span>
 
-                <span
-                  class:list={[
-                    'shrink-0 rounded-full border px-3 py-1 font-display text-sm transition-colors',
-                    isFull
-                      ? 'border-white/25 text-white/50'
-                      : 'border-brand/40 text-brand group-hover:bg-brand group-hover:text-ink-950'
-                  ]}
-                >
-                  {isFull ? 'Completo' : `${race.km} km`}
-                </span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block font-display text-xl leading-tight uppercase">
+                      {race.name}
+                    </span>
+                    <span class="text-xs tracking-wider text-white/60 uppercase">
+                      {race.place}
+                    </span>
+                  </span>
+
+                  <span
+                    class:list={[
+                      'shrink-0 rounded-full border bg-ink-950/45 px-3 py-1 font-display text-sm backdrop-blur-sm transition-colors',
+                      isFull
+                        ? 'border-white/35 text-white/70'
+                        : 'border-brand/55 text-brand group-hover:bg-brand group-hover:text-ink-950'
+                    ]}
+                  >
+                    {isFull ? 'Completo' : `${race.km} km`}
+                  </span>
+                </div>
+
+                <p class="mt-4 text-balance text-sm/relaxed text-white/80">
+                  {race.blurb}
+                </p>
               </div>
-
-              <p class="mt-4 text-sm/relaxed text-white/65">{race.blurb}</p>
             </a>
           </Reveal>
         )
       })
     }
   </ul>
+
+  <p class="mt-4 text-right text-[0.65rem] tracking-wider text-white/35 uppercase">
+    <a
+      href="/images/races/ATTRIBUTION.txt"
+      target="_blank"
+      class="transition-colors hover:text-white/60"
+    >
+      Créditos fotográficos
+    </a>
+  </p>
 </section>
