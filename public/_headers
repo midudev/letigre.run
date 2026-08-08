@@ -1,4 +1,16 @@
 # Cabeceras para Cloudflare (Workers Assets / Pages)
+#
+# Importante (no se puede hacer desde este archivo):
+# En Cloudflare → SSL/TLS → Edge Certificates → activa "Always Use HTTPS"
+# para que http://letigre.run redirija 301 a https:// (Google lo necesita).
+# Opcional: Redirect Rule www.letigre.run/* → https://letigre.run/$1 (301).
+
+# HSTS: tras la 1.ª visita por HTTPS, el navegador solo usa HTTPS.
+# No sustituye "Always Use HTTPS" para crawlers que aún pidan HTTP.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
 
 # Todo lo que Astro genera lleva hash en el nombre: se puede cachear para siempre
 /_astro/*
@@ -27,8 +39,6 @@
 # el resto del contenido sí cambia entre despliegues
 /
   Cache-Control: public, max-age=0, must-revalidate
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
 
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
