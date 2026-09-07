@@ -85,15 +85,6 @@ export interface Race {
 
 export const RACES: Race[] = [
   {
-    date: '2026-09-05',
-    name: 'Prague Night Run',
-    km: 10,
-    place: 'Praga',
-    blurb:
-      '10K de noche por el centro histórico de Praga, con el casco antiguo iluminado y música en cada kilómetro.',
-    image: '/images/races/prague-night-run.webp'
-  },
-  {
     date: '2026-09-18',
     name: 'Copenhagen 5K',
     km: 5,
