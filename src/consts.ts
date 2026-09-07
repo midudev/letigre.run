@@ -85,15 +85,6 @@ export interface Race {
 
 export const RACES: Race[] = [
   {
-    date: '2026-08-30',
-    name: 'Cursa Maria Víctor',
-    km: 7,
-    place: 'Palau-solità i Plegamans',
-    blurb:
-      'Casi 7 km por el bosque de Can Pavana, dentro de la fiesta mayor del pueblo. Tierra, sombra y ambiente de verbena.',
-    image: '/images/races/cursa-maria-victor.webp'
-  },
-  {
     date: '2026-09-05',
     name: 'Prague Night Run',
     km: 10,
