@@ -85,15 +85,6 @@ export interface Race {
 
 export const RACES: Race[] = [
   {
-    date: '2026-09-18',
-    name: 'Copenhagen 5K',
-    km: 5,
-    place: 'Copenhague',
-    blurb:
-      'El 5K de la víspera: sirve para soltar piernas y reconocer el ambiente antes del medio maratón del día siguiente.',
-    image: '/images/races/copenhagen-5k.webp'
-  },
-  {
     date: '2026-09-19',
     name: '1/2 Copenhague',
     km: 21,
