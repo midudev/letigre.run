@@ -9,20 +9,20 @@ importers:
   .:
     dependencies:
       '@astrojs/sitemap':
-        specifier: ^3.7.4
+        specifier: 3.7.4
         version: 3.7.4
       '@tailwindcss/vite':
-        specifier: ^4.3.3
+        specifier: 4.3.3
         version: 4.3.3(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
       astro:
-        specifier: ^7.4.5
+        specifier: 7.4.5
         version: 7.4.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)
       tailwindcss:
-        specifier: ^4.3.3
+        specifier: 4.3.3
         version: 4.3.3
     devDependencies:
       wrangler:
-        specifier: ^4.156.2
+        specifier: 4.156.2
         version: 4.156.2(@types/node@24.19.2)
 
 packages:

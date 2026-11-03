@@ -16,3 +16,6 @@ minimumReleaseAgeExclude:
   - miniflare@5.20260918.0-alpha
   - workerd@1.20260918.1
   - wrangler@4.135.0
+
+# Versiones exactas en package.json (sin ^ ni ~) al hacer add/update
+savePrefix: ''

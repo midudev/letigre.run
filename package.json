@@ -17,12 +17,12 @@
     "posters": "node scripts/extract-video-posters.mjs"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.4",
-    "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.4.5",
-    "tailwindcss": "^4.3.3"
+    "@astrojs/sitemap": "3.7.4",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.4.5",
+    "tailwindcss": "4.3.3"
   },
   "devDependencies": {
-    "wrangler": "^4.156.2"
+    "wrangler": "4.156.2"
   }
 }
