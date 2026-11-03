@@ -85,51 +85,6 @@ export interface Race {
 
 export const RACES: Race[] = [
   {
-    date: '2026-09-19',
-    name: '1/2 Copenhague',
-    km: 21,
-    place: 'Copenhague',
-    blurb:
-      'Uno de los medios maratones más rápidos del mundo: llano de principio a fin y con varios récords batidos en su asfalto.',
-    image: '/images/races/copenhagen-half.webp'
-  },
-  {
-    date: '2026-09-20',
-    name: 'Cursa Popular del Prat',
-    km: 10,
-    place: 'El Prat de Llobregat',
-    blurb:
-      'La 10K de casa, dentro de la Festa Major del Prat. Una mañana para correr por nuestras calles con todo el ambiente del pueblo.',
-    image: '/images/races/cursa-popular-prat.webp'
-  },
-  {
-    date: '2026-10-04',
-    name: 'Media de Logroño',
-    km: 21,
-    place: 'Logroño',
-    blurb:
-      'La media del Maratón Internacional de Logroño. Urbana, tranquila y con el mejor avituallamiento post-carrera de La Rioja.',
-    image: '/images/races/media-logrono.webp'
-  },
-  {
-    date: '2026-10-18',
-    name: 'Cursa Mercabarna',
-    km: 10,
-    place: 'Barcelona',
-    blurb:
-      'Se corre por dentro del mercado mayorista: calles, pabellones de frutas y hortalizas y la lonja del pescado. No se repite en ningún otro 10K.',
-    image: '/images/races/cursa-mercabarna.webp'
-  },
-  {
-    date: '2026-10-25',
-    name: '1/2 Valencia',
-    km: 21,
-    place: 'Valencia',
-    blurb:
-      'La media maratón más rápida del planeta. Circuito plano, público en todo el recorrido y marca personal casi garantizada.',
-    image: '/images/races/valencia-half.webp'
-  },
-  {
     date: '2026-11-08',
     name: 'Behobia - San Sebastián',
     km: 20,
