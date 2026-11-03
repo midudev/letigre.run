@@ -13,6 +13,17 @@ import { CLUB } from '@/consts'
 ---
 
 <Layout>
+  {/* El póster del vídeo del hero es el elemento más grande de la primera
+       pantalla (el LCP): pedirlo cuanto antes adelanta el pintado */}
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    href="/videos/web/hero.webp"
+    type="image/webp"
+    fetchpriority="high"
+  />
+
   <Hero />
 
   <Marquee

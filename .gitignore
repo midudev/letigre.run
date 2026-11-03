@@ -25,3 +25,7 @@ pnpm-debug.log*
 
 # raw source footage (not for the site)
 media/
+
+# wrangler dev / Playwright MCP
+.wrangler/
+.playwright-mcp/

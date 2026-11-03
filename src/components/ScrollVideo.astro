@@ -40,7 +40,9 @@ const objectPos =
       {/* Cuadrado en móvil: un 9/16 a pantalla completa obliga a scrollear el
            vídeo entero. En tablet y escritorio ya cabe vertical. */}
       {/*
-        Poster en capa propia (no el attr `poster` del <video>).
+        Poster en capa propia (no el attr `poster` del <video>). Lazy: están
+        bajo el pliegue y, si no, Chrome los sube a prioridad media y compiten
+        con el LCP del hero.
         En Mobile Safari, al llamar play() el poster nativo se quita ANTES de
         pintar el primer frame → flash negro. El <img> se queda encima hasta
         que hay frame real y entonces se quita al instante (sin fade).
@@ -49,6 +51,7 @@ const objectPos =
         src={`${base}.webp`}
         alt=""
         aria-hidden="true"
+        loading="lazy"
         decoding="async"
         draggable="false"
         class:list={[

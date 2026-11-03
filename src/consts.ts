@@ -15,9 +15,13 @@ export const COLORS = {
 export const SITE = {
   name: 'Run with Le Tigre',
   shortName: 'Le Tigre Run',
-  title: 'Run with Le Tigre · Running Community del Prat de Llobregat',
+  /** Nombre completo de la comunidad (`alternateName` en los datos estructurados) */
+  legalName: 'Le Tigre Running Community',
+  /** ≤ 60 caracteres: Google corta los títulos más largos */
+  title: 'Run with Le Tigre · Club de running en El Prat de Llobregat',
+  /** ≤ 155 caracteres: Google corta las descripciones más largas */
   description:
-    'Club de running del Prat de Llobregat. Salimos todos los sábados a las 8:00 desde Le Tigré Cakes. Ritmo 5:30-5:45 min/km. Café de especialidad antes de salir y croissants a la vuelta, cortesía de la casa.'
+    'Club de running gratis en El Prat de Llobregat. Sábados a las 8:00 desde Le Tigré Cakes, a 5:30-5:45 min/km, con café antes y croissants a la vuelta.'
 } as const
 
 export const CLUB = {

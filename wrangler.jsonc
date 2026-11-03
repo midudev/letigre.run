@@ -5,7 +5,9 @@
   "compatibility_date": "2026-07-30",
   "assets": {
     // Output of `astro build` (static HTML, CSS, JS, images, videos).
-    "directory": "./dist"
+    "directory": "./dist",
+    // Rutas inexistentes: sirve dist/404.html con estado 404 (no un 404 vacío)
+    "not_found_handling": "404-page"
   }
 }
 

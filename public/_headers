@@ -3,7 +3,8 @@
 # Importante (no se puede hacer desde este archivo):
 # En Cloudflare → SSL/TLS → Edge Certificates → activa "Always Use HTTPS"
 # para que http://letigre.run redirija 301 a https:// (Google lo necesita).
-# Opcional: Redirect Rule www.letigre.run/* → https://letigre.run/$1 (301).
+# Rules → Redirect Rules: www.letigre.run/* → https://letigre.run/$1 (301).
+# Sin ella www sirve la misma página con 200 (contenido duplicado para Google).
 
 # HSTS: tras la 1.ª visita por HTTPS, el navegador solo usa HTTPS.
 # No sustituye "Always Use HTTPS" para crawlers que aún pidan HTTP.

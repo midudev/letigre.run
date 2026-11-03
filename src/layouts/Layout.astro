@@ -6,9 +6,15 @@ import "@/styles/global.css"
 interface Props {
   title?: string
   description?: string
+  /** Páginas que no deben indexarse (404): sin canonical ni datos estructurados */
+  noindex?: boolean
 }
 
-const { title = SITE.title, description = SITE.description } = Astro.props
+const {
+  title = SITE.title,
+  description = SITE.description,
+  noindex = false,
+} = Astro.props
 
 const canonical = new URL(Astro.url.pathname, Astro.site)
 
@@ -23,16 +29,27 @@ const OG_IMAGE = {
 
 const ogImageUrl = new URL(OG_IMAGE.path, Astro.site).href
 
+/** Logo cuadrado para el panel de conocimiento de Google (mín. 112×112) */
+const LOGO = { path: "/apple-touch-icon.png", width: 180, height: 180 } as const
+
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "SportsClub",
       "@id": `${Astro.site}#club`,
-      url: canonical.href,
+      url: Astro.site?.href,
       name: SITE.name,
+      alternateName: [SITE.legalName, SITE.shortName],
       description: SITE.description,
       sport: "Running",
+      isAccessibleForFree: true,
+      logo: {
+        "@type": "ImageObject",
+        url: new URL(LOGO.path, Astro.site).href,
+        width: LOGO.width,
+        height: LOGO.height,
+      },
       image: {
         "@type": "ImageObject",
         url: ogImageUrl,
@@ -53,13 +70,16 @@ const structuredData = {
         latitude: CLUB.coords.lat,
         longitude: CLUB.coords.lng,
       },
+      hasMap: LINKS.maps,
       // Los sábados a las 8:00, todas las semanas
       openingHoursSpecification: {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: "https://schema.org/Saturday",
-        opens: CLUB.time,
+        // schema.org Time: `hh:mm` con cero inicial (`8:00` no valida)
+        opens: CLUB.time.padStart(5, "0"),
       },
-      sameAs: [LINKS.instagram, LINKS.strava, LINKS.whatsapp],
+      // Sólo perfiles públicos del club (el enlace de WhatsApp es una invitación)
+      sameAs: [LINKS.instagram, LINKS.strava],
     },
     {
       "@type": "WebSite",
@@ -111,11 +131,24 @@ const structuredData = {
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex, follow" />
+      ) : (
+        <>
+          {/* Previews grandes en Discover / Imágenes y snippets sin límite */}
+          <meta
+            name="robots"
+            content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+          />
+          <link rel="canonical" href={canonical} />
+          <meta property="og:url" content={canonical} />
+        </>
+      )
+    }
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
-    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:locale" content="es_ES" />
@@ -142,23 +175,18 @@ const structuredData = {
     <Font cssVariable="--font-anton" preload />
     <Font cssVariable="--font-inter" />
 
-    {
-      /* El póster del vídeo del hero es el elemento más grande de la primera
-         pantalla (el LCP): pedirlo cuanto antes adelanta el pintado */
-    }
-    <link
-      rel="preload"
-      as="image"
-      href="/videos/web/hero.webp"
-      type="image/webp"
-      fetchpriority="high"
-    />
+    {/* Preloads propios de cada página (p. ej. el LCP de la home) */}
+    <slot name="head" />
 
-    <script
-      type="application/ld+json"
-      is:inline
-      set:html={JSON.stringify(structuredData)}
-    />
+    {
+      !noindex && (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify(structuredData)}
+        />
+      )
+    }
   </head>
   <body class="antialiased">
     <slot />

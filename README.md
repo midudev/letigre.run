@@ -79,7 +79,7 @@ export const SPECIAL_RUNS = [
 }
 ```
 
-Cada carrera necesita una imagen distinta en `public/images/races/`. Si el cupo del grupo está lleno, añade `status: 'full'`.
+Cada carrera necesita una imagen distinta en `public/images/races/`, en WebP de 960×540 (`magick foto.jpg -resize 960x540^ -gravity center -extent 960x540 -quality 76 nombre.webp`). Si el cupo del grupo está lleno, añade `status: 'full'`.
 
 ## Assets
 

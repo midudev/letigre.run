@@ -1,0 +1,33 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Logo from '@/components/Logo.astro'
+import { CLUB, SITE } from '@/consts'
+
+/**
+ * Workers Assets la sirve con estado 404 para cualquier ruta que no exista
+ * (`not_found_handling: "404-page"` en wrangler.jsonc). Sin canonical ni
+ * datos estructurados, y fuera del sitemap.
+ */
+---
+
+<Layout
+  title={`Página no encontrada · ${SITE.name}`}
+  description="Esta página no existe. Vuelve a la portada para ver cuándo es la próxima salida del club."
+  noindex
+>
+  <main class="container-page flex min-h-[100svh] flex-col justify-center py-16">
+    <Logo variant="cat" class="w-24 text-brand" />
+
+    <p class="eyebrow mt-10">Error 404</p>
+    <h1 class="heading-section mt-3">
+      Te has salido<br />
+      <span class="text-brand">de la ruta</span>
+    </h1>
+
+    <p class="lede mt-5">
+      {`Esta página no existe. La salida sigue siendo la de siempre: los ${CLUB.day.toLowerCase()} a las ${CLUB.time} desde ${CLUB.meetingPoint}.`}
+    </p>
+
+    <a href="/" class="btn-brand mt-8 self-start">Volver a la portada</a>
+  </main>
+</Layout>

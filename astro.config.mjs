@@ -11,7 +11,12 @@ export default defineConfig({
   site: 'https://letigre.run',
   output: 'static',
   devToolbar: { enabled: false },
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // Cada despliegue cambia contenido (carreras, textos): fecha del build
+      lastmod: new Date()
+    })
+  ],
   // Las fotos se optimizan offline con `pnpm images` y se sirven desde
   // public/images con <picture>. Sin Sharp en el build de Astro.
   image: {
